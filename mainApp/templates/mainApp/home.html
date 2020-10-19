@@ -1,0 +1,12 @@
+{% extends "shareblocks/base.html" %}
+{% block content %}
+
+{% include "mainApp/carousel.html" %}
+
+<section class="py-5 bg-light"> 
+  {% include "mainApp/pet_card.html" with CategoryName="General" %}
+
+  {% include "mainApp/pet_card.html" with CategoryName="Shelters" %}
+</section>
+
+{% endblock content %}

@@ -57,7 +57,7 @@ ROOT_URLCONF = 'petShelter.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['mainApp/',],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

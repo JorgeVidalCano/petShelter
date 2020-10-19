@@ -1,0 +1,20 @@
+.card-img-top{
+    height: 225px; 
+    width: 100%; 
+    display: block;
+}
+
+.badge-primary.Adopted{ 
+    background-color: #31ad0c !important;
+}
+
+.badge-primary.Urgent{ 
+    background-color: rgb(255, 100, 80)
+}
+
+.badge-primary.Adoption{ 
+    background-color: #0c7aad
+}
+.card.mb-4.box-shadow:hover{
+    box-shadow: 0 6px 10px 0 rgba(61, 76, 80, 0.4), 0 6px 20px 0 rgba(24, 70, 99, 0.4)
+}

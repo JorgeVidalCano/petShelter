@@ -59,7 +59,7 @@ class ImageAdmin(admin.ModelAdmin):
 @admin.register(Pet)
 class PetAdmin(admin.ModelAdmin):
     search_fields = ['name', 'age', 'sex', 'kind', 'weight', 'visits', 'color', 'shelter', 'date_created']
-    readonly_fields = ['visits', 'date_created', 'thumbnail_preview_detail']
+    readonly_fields = ['visits', 'date_created', 'slug', 'thumbnail_preview_detail']
     list_display = ['name', 'age', 'sex', 'kind', 'weight', 'visits', 'color', 'shelter', 'date_created', 'thumbnail_preview_list']
     ordering = ('name', 'age', 'sex', 'kind', 'weight', 'visits', 'color', 'shelter', 'date_created')
 

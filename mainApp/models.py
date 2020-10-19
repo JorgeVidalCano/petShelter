@@ -69,7 +69,8 @@ class Pet(models.Model):
     )
     STATE = (
         ("Adoption", "Adoption"),
-        ("Adopted", "Adopted")
+        ("Adopted", "Adopted"),
+        ("Urgent", "Urgent")
     )
     TYPE = (
         ("Cat", "Cat"),
@@ -82,8 +83,9 @@ class Pet(models.Model):
         ("#800000", "Brown"),
         ("#808080", "Gray"),
     )
-    models.AutoField(primary_key=True) # this is need to use the pk in the save method
+    id = models.AutoField(primary_key=True) # this is need to use the pk in the save method
     name = models.CharField(max_length=60)
+    about = models.CharField(max_length=300)
     age = models.PositiveIntegerField(default=0)
     sex = models.CharField(max_length=10, choices=SEX, default="Unknown")
     kind = models.CharField(max_length=5, choices=TYPE, default="Cat")
@@ -93,7 +95,7 @@ class Pet(models.Model):
     color = models.CharField(max_length=7, choices=COLOR, default="FFF")
     shelter = models.ForeignKey(Shelter, related_name="albergue", default=None, on_delete=models.CASCADE)
     images = models.ForeignKey(Images, related_name="imagenes", default=None, blank=True, on_delete=models.CASCADE)
-    features = models.ForeignKey(Feature, related_name="atributos", default=None, blank=True, on_delete=models.CASCADE)
+    features = models.ForeignKey(Feature, related_name="atributos", null=True, blank=True, on_delete=models.CASCADE)
     date_created = models.DateField(default=timezone.now)
     slug = models.SlugField(unique=True, blank=True) #blank is true but is changed before saving the pet
 
@@ -122,3 +124,6 @@ class Pet(models.Model):
 
     def countPets(self):
         return Pet.objects.filter(shelter=self).count()
+
+    def getFilterPets(self, conditions):
+        return self.objects.filter(conditions)
