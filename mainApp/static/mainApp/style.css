@@ -18,3 +18,8 @@
 .card.mb-4.box-shadow:hover{
     box-shadow: 0 6px 10px 0 rgba(61, 76, 80, 0.4), 0 6px 20px 0 rgba(24, 70, 99, 0.4)
 }
+.img-picture{
+    background-color: rgba(144, 135, 135, 0.555);
+    padding: 0;
+    margin:0;
+}

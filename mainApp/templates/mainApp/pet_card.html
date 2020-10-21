@@ -1,6 +1,6 @@
-<h3 class="display-4 text-center">{{CategoryName}}</h3>
+<h3 class="display-4 text-center"><a href="">{{CategoryName|title}}</a></h3>
     <div class="row mx-3">
-      {% for pet in pets %}
+      {% for pet in PetList %}
       <div class="col-lg-2 col-md-4 col-sm-12">
         <div class="card mb-4 box-shadow">
           <img class="card-img-top" alt="{{ pet.images.name }}" src="{{ pet.images.image.url}}">

@@ -8,7 +8,7 @@ from django.db import models
 class Shelter(models.Model):
     name = models.CharField(max_length=60, unique=True)
     location = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, blank="True")
     manager = models.ForeignKey(User, related_name="usuario", on_delete=models.CASCADE)
 
     def __str__(self):
@@ -127,3 +127,6 @@ class Pet(models.Model):
 
     def getFilterPets(self, conditions):
         return self.objects.filter(conditions)
+    
+    def getShelter(self):
+        return self.shelter.name
