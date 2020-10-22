@@ -3,7 +3,7 @@
       {% for pet in PetList %}
       <div class="col-lg-2 col-md-4 col-sm-12">
         <div class="card mb-4 box-shadow">
-          <img class="card-img-top" alt="{{ pet.images.name }}" src="{{ pet.images.image.url}}">
+          <img class="card-img-top" alt="{{ pet.images.name }}" src="{{ pet.images.first.image.url}}">
           <div class="card-img-overlay">
             <h3><span class="badge badge-primary {{ pet.status }}">{{ pet.status }}</span></h3>
           </div>

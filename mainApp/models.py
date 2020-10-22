@@ -46,9 +46,15 @@ class Images(models.Model):
         if self.image:
             return mark_safe('<img src="{}" width="40px" height="30px" class="img-thumbnail" />'.format(self.image.url))
         return ""
-    
+
     def __str__(self):
         return self.name
+
+    def allPics(self):
+        return self.objects.all()
+    
+    def firstPic(self):
+        return self.objects.first()
 
 class Feature(models.Model):
     # To add things such Vacunated, sick, microchip etc.
@@ -94,8 +100,10 @@ class Pet(models.Model):
     status = models.CharField(max_length=10, choices=STATE, default="Adoption")
     color = models.CharField(max_length=7, choices=COLOR, default="FFF")
     shelter = models.ForeignKey(Shelter, related_name="albergue", default=None, on_delete=models.CASCADE)
-    images = models.ForeignKey(Images, related_name="imagenes", default=None, blank=True, on_delete=models.CASCADE)
-    features = models.ForeignKey(Feature, related_name="atributos", null=True, blank=True, on_delete=models.CASCADE)
+    # images = models.ForeignKey(Images, related_name="imagenes", default=None, blank=True, on_delete=models.CASCADE)
+    # features = models.ForeignKey(Feature, related_name="atributos", null=True, blank=True, on_delete=models.CASCADE)
+    images = models.ManyToManyField(Images, related_name="imagenes", blank=True)
+    features = models.ManyToManyField(Feature, related_name="atributos", blank=True)
     date_created = models.DateField(default=timezone.now)
     slug = models.SlugField(unique=True, blank=True) #blank is true but is changed before saving the pet
 
@@ -110,16 +118,28 @@ class Pet(models.Model):
     def get_absolute_url(self):
         return reverse('pet-detail', kwargs={'slug':self.slug})
 
+    def petMainPic(self):
+        return Images.objects.filter(pk = self.pk).first().image.url
+
+    def petAllPics(self):
+        return Images.objects.filter(pk = self.pk).image.url
+
     @property
     def thumbnail_preview_detail(self):
         if self.images:
-            return mark_safe('<img src="{}" width="740" height="100%" class="img-thumbnail" />'.format(self.images.image.url))
+            do for loop here
+            return mark_safe('<img src="{}" width="740" height="100%" class="img-thumbnail" />'.format(p))
         return ""
     
     @property
     def thumbnail_preview_list(self):    
         if self.images:
-            return mark_safe('<img src="{}" width="40px" height="30px" class="img-thumbnail" />'.format(self.images.image.url))
+            try:
+                print(self.petMainPic())
+                return mark_safe('<img src="{}" width="40px" height="30px" class="img-thumbnail" />'.format(self.petMainPic()))
+            except Exception as e :
+                pass
+
         return ""
 
     def countPets(self):

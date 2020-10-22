@@ -23,14 +23,10 @@ class HomeView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['titleTab'] = 'Home'
         
-        filters = {
-            "status__in":["Urgent","Adoption"]    
-            }
+        filters = {"status__in":["Urgent","Adoption"]}
         
-        context['pets'] = Pet.objects.filter(**filters).order_by("?")
-
+        context['pets'] = Pet.objects.filter(**filters).order_by("?") # all pets
         shelters = Shelter.objects.order_by("?")[:2]
-        copyNames=copy.copy(shelters) # shelters its a refval so it keeps changing
         
         # list of pets in shelters
         filters["shelter"] = shelters[0]
@@ -40,6 +36,7 @@ class HomeView(TemplateView):
         context['petShelter2'] = Pet.objects.filter(**filters)[:6]
 
         # shelters names
+        copyNames=copy.copy(shelters) # shelters are a refval so it keeps changing
         context['shelterName1'] = copyNames[0]
         context['shelterName2'] = copyNames[1]
 
@@ -47,62 +44,66 @@ class HomeView(TemplateView):
 
 class LazyReload(ListView):
 
-    # def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         
-    #     if self.request.is_ajax() and self.request.method == "GET":
-    #         filters = {
-    #             "status__in":["Urgent","Adoption"]    
-    #         }
-    #         # excludes = {
-    #         #     "id":[load the list of animals]
-    #         # }
+         if self.request.is_ajax() and self.request.method == "GET":
 
-    #         # if self.kwargs.get("tag") is not None:
-    #             # tag = TagPost.objects.get(slug=slugify(self.kwargs.get('tag')))
-    #             # filters["tags"] = tag
+            
+            filters = {
+                "status__in":["Urgent","Adoption"]    
+            }
+            excludes = {}
+            # excludes = {
+            #     "id":[load the list of animals]
+            # }
 
-    #         try:
-    #             self.pet_list = Pet.objects.filter(**filters).exclude(**excludes).order_by('-date_posted')
-    #             self.page = self.selectPostsByPage(self.post_list)
-    #             ser_instance = self.getPosts(self.page)
-                
-    #             return JsonResponse({"instance": ser_instance, "end": False}, status=200)
-    #         except Exception as ex:
-    #             print(ex)
-    #             return JsonResponse({"instance": None, "end": True}, status=200)    
+            # if self.kwargs.get("tag") is not None:
+                # tag = TagPost.objects.get(slug=slugify(self.kwargs.get('tag')))
+                # filters["tags"] = tag
+
+            try:
+                self.pet_list = Pet.objects.filter(**filters).exclude(**excludes).order_by('-date_created')
+                self.page = self.selectPetsByPage(self.pet_list)
+                print(self.page)
+                ser_instance = self.getPets(self.page)
+                # print("HERE")
+                # print(self.ser_instance)
+                return JsonResponse({"instance": ser_instance, "end": False}, status=200)
+            except Exception as ex:
+                print(ex)
+                return JsonResponse({"instance": None, "end": True}, status=200)    
     
-    def selectPostsByPage(self, post_list):
-        # we select the next 5 posts
+    def selectPetsByPage(self, pet_list):
+        # we select the next 6 pets
         numberPage = self.kwargs.get("page")
-        splitPag = Paginator(self.post_list, 5)
+        splitPag = Paginator(self.pet_list, 2)
         self.page = splitPag.page(numberPage)
         
         return self.page
     
-    def getPosts(self, page_post):
-        # we get the 5 posts and serialize them
-        posts = self.preserializer(page_post)
-        ser_instance = json.dumps(list(posts))    
+    def getPets(self, page_pet):
+        # we get the 5 pets and serialize them
+        pets = self.preserializer(page_pet)
+        ser_instance = json.dumps(list(pets))
         
         return ser_instance
 
-    def preserializer(self, page_posts):
-        # Because I was unable to retrieve the tags and author, I have to loop over through
+    def preserializer(self, page_pet):
         # the queryset and create a dict and add it to a list
-        posts = []
-        post = {}
+        pets = []
+        pet = {}
 
-        for p in page_posts.object_list:
-            post = {
-                "title": p.title.title(),
-                "content": p.content,
-                "image": p.PostImages.url,
-                "datePosted": p.date_posted.strftime("%d-%b-%Y"),
-                "author": p.author.username.title(),
-                "slug": p.slug,
-                "tags": [t.tag for t in p.findTags()]
+        for p in page_pet.object_list:
+            pet = {
+                "name": p.name,
+                "sex": p.sex,
+                "status": p.status,
+                "shelter": p.shelter.name, 
+                #"images": p.images.Images.url,
+                "slug" : p.slug
             }
-            
-            posts.append(post)
-        return posts
+            print(p.images.url)
+            # print(p.images.Images.url)
+            pets.append(pet)
+        return pets
 

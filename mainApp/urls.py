@@ -6,7 +6,8 @@ from .views import HomeView, LazyReload
 
 urlpatterns = [
     path('', HomeView.as_view(), name="home"),
-    path('lazyReload/', LazyReload.as_view(), name="lazy-reload")
+    path('lazyReload/<int:page>', LazyReload.as_view(), name="lazy-reload"),
+    path('lazyReload/<int:page>/<shelter>', LazyReload.as_view(), name="lazy-reload")
 ]
 
 if settings.DEBUG:
