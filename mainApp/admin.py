@@ -5,19 +5,22 @@ from .models import Shelter, Pet, Images, Feature
 admin.site.unregister(Group)
 
 ## To add new obj without having to leave the page to create them
-class ImageAdmin(admin.StackedInline):
+class ImageListAdmin(admin.StackedInline):
     readonly_fields = ["thumbnail_preview_detail"]
     list_display = ('name', 'thumbnail_preview_list',)
     model = Images
+    # extra = 4
 
-class FeatureAdmin(admin.StackedInline):
+class FeatureListAdmin(admin.StackedInline):
+    list_display =("name", "pet", "description")
+    
     model = Feature
+    #inlines = [FeatureListAdmin]
 
 class PetAdmin(admin.StackedInline):
     model = Pet
-    inlines = [ImageAdmin, FeatureAdmin]
-
-
+    inlines = [ImageListAdmin, FeatureListAdmin]
+    
 ## To show the models in the admin
 @admin.register(Feature)
 class FeatureAdmin(admin.ModelAdmin):
@@ -27,7 +30,6 @@ class FeatureAdmin(admin.ModelAdmin):
 
 @admin.register(Shelter)
 class ShelterAdmin(admin.ModelAdmin):
-    inlines = [PetAdmin]
     search_fields = ['name', 'location', 'manager', 'animals']
     list_display = ['name', 'location', 'slug', 'manager', 'animals']
     ordering = ('name', 'location', 'manager')
@@ -40,9 +42,9 @@ class ShelterAdmin(admin.ModelAdmin):
  
 @admin.register(Images)
 class ImageAdmin(admin.ModelAdmin):
-    search_fields = ['name', 'image']
+    search_fields = ['name', 'image', 'petName']
     readonly_fields = ['thumbnail_preview_detail']
-    list_display = ['name', 'image', 'thumbnail_preview_list']
+    list_display = ['name', 'image', 'petName','thumbnail_preview_list']
     ordering = ('name',)
     
     class Meta:
@@ -52,14 +54,18 @@ class ImageAdmin(admin.ModelAdmin):
     def thumbnail_preview(self, obj):
         return obj.thumbnail_preview
 
+    def petName(self, pet):
+        return pet.petName()
+
     thumbnail_preview.short_description = 'Image Preview'
     thumbnail_preview.allow_tags = True
 
 
 @admin.register(Pet)
 class PetAdmin(admin.ModelAdmin):
+    inlines = [ImageListAdmin, FeatureListAdmin]
     search_fields = ['name', 'age', 'sex', 'kind', 'weight', 'visits', 'color', 'shelter', 'date_created']
-    readonly_fields = ['visits', 'date_created', 'slug', 'thumbnail_preview_detail']
+    readonly_fields = ['visits', 'date_created', 'slug']
     list_display = ['name', 'age', 'sex', 'kind', 'weight', 'visits', 'color', 'shelter', 'date_created', 'thumbnail_preview_list']
     ordering = ('name', 'age', 'sex', 'kind', 'weight', 'visits', 'color', 'shelter', 'date_created')
 

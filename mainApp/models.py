@@ -25,48 +25,6 @@ class Shelter(models.Model):
     def get_absolute_url(self):
         return reverse('shelter-detail', kwargs={'slug':self.slug})
 
-class Images(models.Model):
-    
-    name = models.CharField(max_length=60, default="", blank=True)
-    image = models.ImageField(upload_to="pet_imagen")
-
-    def save(self, *args, **kwargs):
-        if self.name == "":
-            self.name = self.image.url.split("/")[-1]
-        super(Images, self).save(*args, **kwargs)
-
-    @property
-    def thumbnail_preview_detail(self):
-        if self.image:
-            return mark_safe('<img src="{}" width="740" height="100%" class="img-thumbnail" />'.format(self.image.url))
-        return ""
-    
-    @property
-    def thumbnail_preview_list(self):    
-        if self.image:
-            return mark_safe('<img src="{}" width="40px" height="30px" class="img-thumbnail" />'.format(self.image.url))
-        return ""
-
-    def __str__(self):
-        return self.name
-
-    def allPics(self):
-        return self.objects.all()
-    
-    def firstPic(self):
-        return self.objects.first()
-
-class Feature(models.Model):
-    # To add things such Vacunated, sick, microchip etc.
-    # Like this, everyone could create and delete a feature, and everyone would see all features.
-    # Then, only the admin will create, modify and delete them, otherwise, it's going to be annoying to create features
-    # every shelter and many will be repeated.
-    name = models.CharField(max_length=30, unique=True)
-    description = models.CharField(max_length=60)
-
-    def __str__(self):
-        return self.name
-
 class Pet(models.Model):
     SEX = (
         ('Male', 'Male'),
@@ -100,10 +58,6 @@ class Pet(models.Model):
     status = models.CharField(max_length=10, choices=STATE, default="Adoption")
     color = models.CharField(max_length=7, choices=COLOR, default="FFF")
     shelter = models.ForeignKey(Shelter, related_name="albergue", default=None, on_delete=models.CASCADE)
-    # images = models.ForeignKey(Images, related_name="imagenes", default=None, blank=True, on_delete=models.CASCADE)
-    # features = models.ForeignKey(Feature, related_name="atributos", null=True, blank=True, on_delete=models.CASCADE)
-    images = models.ManyToManyField(Images, related_name="imagenes", blank=True)
-    features = models.ManyToManyField(Feature, related_name="atributos", blank=True)
     date_created = models.DateField(default=timezone.now)
     slug = models.SlugField(unique=True, blank=True) #blank is true but is changed before saving the pet
 
@@ -122,18 +76,12 @@ class Pet(models.Model):
         return Images.objects.filter(pk = self.pk).first().image.url
 
     def petAllPics(self):
-        return Images.objects.filter(pk = self.pk).image.url
-
-    @property
-    def thumbnail_preview_detail(self):
-        if self.images:
-            do for loop here
-            return mark_safe('<img src="{}" width="740" height="100%" class="img-thumbnail" />'.format(p))
-        return ""
-    
+        #return Images.objects.filter(pk = self.pk).image.url
+        return self.related.all()#.images#.values("images")
+ 
     @property
     def thumbnail_preview_list(self):    
-        if self.images:
+        if self.petMainPic:
             try:
                 print(self.petMainPic())
                 return mark_safe('<img src="{}" width="40px" height="30px" class="img-thumbnail" />'.format(self.petMainPic()))
@@ -150,3 +98,51 @@ class Pet(models.Model):
     
     def getShelter(self):
         return self.shelter.name
+
+class Images(models.Model):
+    
+    name = models.CharField(max_length=60, default="", blank=True)
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name="pet_imagenes")
+    image = models.ImageField(upload_to="pet_imagen")
+
+    def save(self, *args, **kwargs):
+        if self.name == "":
+            self.name = self.image.url.split("/")[-1]
+        super(Images, self).save(*args, **kwargs)
+
+    @property
+    def thumbnail_preview_detail(self):
+        return mark_safe('<img src="{}" width="740" height="100%" class="img-thumbnail" />'.format(self.image.url))
+        if self.image:
+            pass
+        return ""
+    
+    @property
+    def thumbnail_preview_list(self):    
+        return mark_safe('<img src="{}" width="40px" height="30px" class="img-thumbnail" />'.format(self.image.url))
+        
+
+    def __str__(self):
+        return self.name
+
+    def allPics(self):
+        return self.objects.all()
+    
+    def firstPic(self):
+        return self.objects.first()
+    
+    def petName(self):
+        return self.pet.name
+
+class Feature(models.Model):
+    # To add things such Vacunated, sick, microchip etc.
+    # Like this, everyone could create and delete a feature, and everyone would see all features.
+    # Then, only the admin will create, modify and delete them, otherwise, it's going to be annoying to create features
+    # every shelter and many will be repeated.
+    name = models.CharField(max_length=30, unique=True)
+    pet = models.ForeignKey(Pet, related_name="pet_atributos", on_delete=models.CASCADE, blank=True)
+    description = models.CharField(max_length=60)
+
+    def __str__(self):
+        return self.name
+
