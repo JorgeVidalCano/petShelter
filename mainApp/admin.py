@@ -32,6 +32,7 @@ class FeatureAdmin(admin.ModelAdmin):
 class ShelterAdmin(admin.ModelAdmin):
     search_fields = ['name', 'location', 'manager', 'animals']
     list_display = ['name', 'location', 'slug', 'manager', 'animals']
+    readonly_fields = ['slug']
     ordering = ('name', 'location', 'manager')
     
     def animals(self, user):

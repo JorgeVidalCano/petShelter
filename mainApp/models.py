@@ -1,4 +1,5 @@
 from django.template.defaultfilters import slugify
+from django.utils.crypto import get_random_string
 from django.contrib.auth.models import User
 from django.utils.html import mark_safe
 from django.utils import timezone
@@ -39,6 +40,8 @@ class Pet(models.Model):
     TYPE = (
         ("Cat", "Cat"),
         ("Dog", "Dog"),
+        ("Guinea pig", "Guinea pig"),
+        ("Rabit", "Rabit"),
         ("Other", "Other")
     )
     COLOR = (
@@ -52,7 +55,7 @@ class Pet(models.Model):
     about = models.CharField(max_length=300)
     age = models.PositiveIntegerField(default=0)
     sex = models.CharField(max_length=10, choices=SEX, default="Unknown")
-    kind = models.CharField(max_length=5, choices=TYPE, default="Cat")
+    kind = models.CharField(max_length=10, choices=TYPE, default="Cat")
     weight = models.PositiveIntegerField(default=0)
     visits = models.PositiveIntegerField(default=0)
     status = models.CharField(max_length=10, choices=STATE, default="Adoption")
@@ -65,19 +68,19 @@ class Pet(models.Model):
         return self.name
     
     def save(self, *args, **kwargs):
-        # creates a unique slug
-        self.slug = slugify(f"Adopt {self.name} {self.id}")
+        self.slug = slugify(f"Adopt {self.name} {get_random_string(length=5)}")        
         super(Pet, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('pet-detail', kwargs={'slug':self.slug})
 
     def petMainPic(self):
-        return Images.objects.filter(pk = self.pk).first().image.url
+        if Images.objects.filter(pet=self, mainPic=True).count() > 0:
+            return Images.objects.filter(pet=self, mainPic=True).first().image.url
+        return "/media/pet_imagen/default.jpg"
 
-    def petAllPics(self):
-        #return Images.objects.filter(pk = self.pk).image.url
-        return self.related.all()#.images#.values("images")
+    def petAllPics(self):        
+        return self.related.all()
  
     @property
     def thumbnail_preview_list(self):    
@@ -104,6 +107,7 @@ class Images(models.Model):
     name = models.CharField(max_length=60, default="", blank=True)
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name="pet_imagenes")
     image = models.ImageField(upload_to="pet_imagen")
+    mainPic = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if self.name == "":

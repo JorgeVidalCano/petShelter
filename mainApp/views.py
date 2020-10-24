@@ -25,20 +25,22 @@ class HomeView(TemplateView):
         
         filters = {"status__in":["Urgent","Adoption"]}
         
-        context['pets'] = Pet.objects.filter(**filters).order_by("?") # all pets
+        context['pets'] = Pet.objects.filter(**filters).order_by("?")[:6] # all pets
         shelters = Shelter.objects.order_by("?")[:2]
         
         # list of pets in shelters
-        filters["shelter"] = shelters[0]
-        context['petShelter1'] = Pet.objects.filter(**filters)[:6]
-        
-        filters["shelter"] = shelters[1]
-        context['petShelter2'] = Pet.objects.filter(**filters)[:6]
+        if shelters.count() > 1:            
+            # shelters are a refval so it keeps changing. A copy it's needed to keep order
+            shelterCopy=copy.copy(shelters)
+            context['shelterName1'] = shelterCopy[0]
+            context['shelterName2'] = shelterCopy[1]
 
-        # shelters names
-        copyNames=copy.copy(shelters) # shelters are a refval so it keeps changing
-        context['shelterName1'] = copyNames[0]
-        context['shelterName2'] = copyNames[1]
+            filters["shelter"] = shelterCopy[0]
+            context['petShelter1'] = Pet.objects.filter(**filters)[:6]
+            
+            filters["shelter"] = shelterCopy[1]
+            context['petShelter2'] = Pet.objects.filter(**filters)[:6]
+
 
         return context
 
@@ -47,12 +49,12 @@ class LazyReload(ListView):
     def get(self, request, *args, **kwargs):
         
          if self.request.is_ajax() and self.request.method == "GET":
-
             
             filters = {
                 "status__in":["Urgent","Adoption"]    
             }
             excludes = {}
+            
             # excludes = {
             #     "id":[load the list of animals]
             # }
@@ -64,10 +66,8 @@ class LazyReload(ListView):
             try:
                 self.pet_list = Pet.objects.filter(**filters).exclude(**excludes).order_by('-date_created')
                 self.page = self.selectPetsByPage(self.pet_list)
-                print(self.page)
                 ser_instance = self.getPets(self.page)
-                # print("HERE")
-                # print(self.ser_instance)
+                print(ser_instance)
                 return JsonResponse({"instance": ser_instance, "end": False}, status=200)
             except Exception as ex:
                 print(ex)
@@ -95,15 +95,14 @@ class LazyReload(ListView):
 
         for p in page_pet.object_list:
             pet = {
-                "name": p.name,
+                "name": p.name.title(),
                 "sex": p.sex,
                 "status": p.status,
-                "shelter": p.shelter.name, 
-                #"images": p.images.Images.url,
-                "slug" : p.slug
+                "shelter": p.shelter.name.title(), 
+                "images": p.petMainPic(),
+                "slug" : p.slug,
+                "date_created": p.date_created.strftime("%b %d, %Y"),
             }
-            print(p.images.url)
-            # print(p.images.Images.url)
             pets.append(pet)
         return pets
 
