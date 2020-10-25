@@ -25,7 +25,10 @@ class Shelter(models.Model):
 
     def countPets(self):
         return Pet.objects.filter(shelter=self.id).count()
-    
+
+    def AmountInAdoption(self):
+        return Pet.objects.filter(shelter=self.id, status__in=["Urgent","Adoption"]).count()
+
     def get_absolute_url(self):
         return reverse('shelter-detail', kwargs={'slug':self.slug})
 
@@ -77,6 +80,9 @@ class Pet(models.Model):
 
     def get_absolute_url(self):
         return reverse('pet-detail', kwargs={'slug':self.slug})
+    
+    def getShelterUrl(self):
+        return reverse('shelter-detail', kwargs={'slug':self.slug})
 
     def petMainPic(self):
         if Images.objects.filter(pet=self, mainPic=True).count() > 0:
@@ -114,8 +120,9 @@ class Images(models.Model):
     mainPic = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        # we resize the img
-        super().save(*args, **kwargs)
+        if self.name == "":
+            self.name = self.image.url.split("/")[-1]
+        super(Images, self).save(*args, **kwargs)
         img = Image.open(self.image.path)
 
         # if img.height > 300 or img.width > 300:
@@ -125,11 +132,6 @@ class Images(models.Model):
         output_size = (450, 450)
         img.thumbnail(output_size)
         img.save(self.image.path)
-
-    def save(self, *args, **kwargs):
-        if self.name == "":
-            self.name = self.image.url.split("/")[-1]
-        super(Images, self).save(*args, **kwargs)
 
     @property
     def thumbnail_preview_detail(self):

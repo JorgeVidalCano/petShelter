@@ -11,7 +11,9 @@
   
       <div class="col-md-4">
         <h4 class="h4">Shelter</h4>
-        <p>I live in <b>{{ object.shelter.name|title }}</b></p>
+        <p>I live in <b>
+          <a class="removeHoverLink badge badge-primary p-2" href="{% url 'shelter-detail' object.shelter.slug %}">{{ object.shelter.name|title }}</a>
+        </b></p>
         <h4 class="h4">About me</h4>
         <p>{{ object.about|capfirst }}</p>
         <h4 class="h4"> {{object.name.title}}'s details</h4>

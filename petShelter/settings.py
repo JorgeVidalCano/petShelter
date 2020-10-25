@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'mainApp',
+    'carousel',
 
 ]
 
@@ -52,7 +53,10 @@ ROOT_URLCONF = 'petShelter.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['mainApp/',],
+        'DIRS': [
+            'mainApp/',
+            'carousel/',
+            ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

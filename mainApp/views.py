@@ -39,9 +39,34 @@ class HomeView(TemplateView):
 
             filters["shelter"] = shelterCopy[0]
             context['petShelter1'] = Pet.objects.filter(**filters)[:ROWPET]
-            
+            context['slugShelter1'] = shelterCopy[0] # needed to get the url
+
+
             filters["shelter"] = shelterCopy[1]
             context['petShelter2'] = Pet.objects.filter(**filters)[:ROWPET]
+            context['slugShelter2'] = shelterCopy[1]
+
+            return context
+
+class DetailPetView(DetailView):
+    template_name = "mainApp/detail_pet.html"
+    model = Pet
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titleTab'] = f"{kwargs['object']} details"
+        filters = {
+            "kind": kwargs['object'].kind,
+            "status__in": ["Urgent","Adoption"],
+            "age__gte": kwargs['object'].age - 2,
+            "age__lte": kwargs['object'].age + 2,
+        }
+        excludes = {"id": kwargs['object'].id}
+        context['related_pets'] = Pet.objects.filter(**filters).exclude(**excludes).order_by("?")[:ROWPET]
+        # if we get less than 4 related pets, with do a less restrictive query
+        if context['related_pets'].count() < 4:
+            context['related_pets'] = Pet.objects.filter(kind= kwargs['object'].kind, status__in= ["Urgent","Adoption"],).exclude(**excludes).order_by("?")[:ROWPET]
+
 
         return context
 
@@ -58,6 +83,21 @@ class ShelterView(TemplateView):
 
         return context
 
+class DetailShelterView(DetailView):
+    template_name = "mainApp/detail_shelter.html"
+    model = Shelter
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super().get_context_data(**kwargs)
+        context['titleTab'] = f"{kwargs['object']} details"
+
+        context['AmountInAdoption'] =  kwargs['object'].AmountInAdoption()
+        context['total'] = kwargs['object'].countPets()
+        print(context)
+        return context
+
+        return context
 
 class LazyReload(ListView):
 
@@ -120,22 +160,3 @@ class LazyReload(ListView):
             pets.append(pet)
         return pets
 
-class DetailPetView(DetailView):
-    template_name = "mainApp/detail_pet.html"
-    model = Pet
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['titleTab'] = f"{kwargs['object']} details"
-        filters = {
-            "kind": kwargs['object'].kind,
-            "status__in": ["Urgent","Adoption"],
-            "age__gte": kwargs['object'].age - 2,
-            "age__lte": kwargs['object'].age + 2,
-        }
-        excludes = {"id": kwargs['object'].id}
-        context['related_pets'] = Pet.objects.filter(**filters).exclude(**excludes).order_by("?")[:ROWPET]
-        # if we get less than 4 related pets, with do a less restrictive query
-        if context['related_pets'].count() < 4:
-            context['related_pets'] = Pet.objects.filter(kind= kwargs['object'].kind, status__in= ["Urgent","Adoption"],).exclude(**excludes).order_by("?")[:ROWPET]
-        return context

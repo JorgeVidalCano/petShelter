@@ -1,0 +1,28 @@
+{% extends "shareblocks/base.html" %}
+{% block content %}
+
+<section class="py-2 bg-light"> 
+    <div class="container">
+    <h1 class="my-4"><b>{{ object.name|title }}</b></h1>
+    <div class="row">
+      <div class="col-md-8">
+        <img class="img-fluid" style="width: auto; max-width: 80%; height: 450px;" src="{{ object.image.url }}" alt="{{ object.name }} {{ object.location }}">
+      </div>
+      <div class="col-md-4">
+        <h4 class="h4">About us</h4>
+        <p>{{ object.about|capfirst }}</p>
+        <h4 class="h4">Adoptions</h4>
+        <p>We still have {{ AmountInAdoption }} animals to adopt out of {{ total }}</p>
+        <h4 class="h4">You can find us: </h4>
+        <p>{{ object.location }}</p>
+        <h4 class="h4">Run by: </h4>
+        <p>{{ object.manager|title }}</p>
+      </div>
+    </div>
+  </div>    
+  <div class="container-fluid">
+      {% include "mainApp/pet_card.html" with CategoryName="Similar Pets" PetList=related_pets %} 
+  </div>  
+</section>
+
+{% endblock content %}

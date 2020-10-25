@@ -15,6 +15,7 @@
 .badge-primary.Adoption{ 
     background-color: #0c7aad
 }
+
 #box-shadow:hover{
     box-shadow: 0 6px 10px 0 rgba(61, 76, 80, 0.4), 0 6px 20px 0 rgba(24, 70, 99, 0.4)
 }
@@ -24,6 +25,7 @@
     padding: 0;
     margin:0;
 }
+
 #home-carousel{
     height: 30rem;
     width: 100%;
@@ -35,13 +37,17 @@
     width: 100%;
     object-fit: cover;
 }
-#pet-card > a:visited, #pet-card > a:link{
+
+#pet-card > a:visited, #pet-card > a:link, .removeHoverLink:visited, .removeHoverLink:link{
     color: black !important;
 }
-#pet-card > a:hover{
+
+#pet-card > a:hover, .removeHoverLink:hover{
     text-decoration: none;
-    color:#007bff!important ;
+    color:#212529!important;
+    /* color:#007bff!important ; */
 }
+
 
 .badge-tag-pets{
     background-color: #03a9f4;
