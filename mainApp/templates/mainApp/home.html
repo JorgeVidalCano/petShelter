@@ -4,9 +4,11 @@
 {% include "mainApp/carousel.html" %}
 
 <section class="py-3 bg-light"> 
-  {% include "mainApp/pet_card.html" with CategoryName=shelterName1 PetList=petShelter1 %}
-  {% include "mainApp/pet_card.html" with CategoryName=shelterName2 PetList=petShelter2 %}
-  {% include "mainApp/pet_card.html" with CategoryName="All pets" PetList=pets %}
+  <div class="container-fluid">
+    {% include "mainApp/pet_card.html" with CategoryName=shelterName1 PetList=petShelter1 %}
+    {% include "mainApp/pet_card.html" with CategoryName=shelterName2 PetList=petShelter2 %}
+    {% include "mainApp/pet_card.html" with CategoryName="All pets" PetList=pets %}
+  </div>
 </section>
 
 {% endblock content %}

@@ -25,9 +25,10 @@ $(document).ready(function () {
                 
                 for ( var i = 0; i < instance.length; i++){
                 var results = $(`
-                    <div class="col-lg-2 col-md-4 col-sm-12">
-                    <div class="card mb-4 box-shadow">
-                      <img class="card-img-top" alt="${ instance[i].name }" src="${ instance[i].images}">
+                    <div id="pet-card" class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                    <a href="${ instance[i].slug}" >
+                    <div class="card mb-4" id="box-shadow">
+                      <img id="pet-image-card" class="card-img-top" alt="${ instance[i].name }" src="${ instance[i].images}">
                       <div class="card-img-overlay">
                         <h3><span class="badge badge-primary ${ instance[i].status }">${ instance[i].status }</span></h3>
                       </div>

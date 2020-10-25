@@ -6,15 +6,20 @@
   <div class="collapse navbar-collapse" id="navbars">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home</a>
+        <a class="nav-link" href="{% url 'home' %}">Home</a>
       </li>
       <li class="nav-item active">
-        <a class="nav-link" href="#">Shelters</a>
+        <a class="nav-link" href="{% url 'shelter-list' %}">Shelters</a>
       </li>
       <li class="nav-item active">
           <a class="nav-link" href="#">Pets</a>
         </li>
-    </ul>
+        {% if user.is_superuser %}
+        <li class="nav-item">
+          <a class="nav-link" href="/admin">Admin</a>
+        </li>
+        {% endif %}
+      </ul>
     <form class="form-inline my-2 my-md-0">
       <input class="form-control" type="text" placeholder="Search your new friend">
     </form>

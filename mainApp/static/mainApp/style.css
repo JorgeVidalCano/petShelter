@@ -15,11 +15,41 @@
 .badge-primary.Adoption{ 
     background-color: #0c7aad
 }
-.card.mb-4.box-shadow:hover{
+#box-shadow:hover{
     box-shadow: 0 6px 10px 0 rgba(61, 76, 80, 0.4), 0 6px 20px 0 rgba(24, 70, 99, 0.4)
 }
+
 .img-picture{
     background-color: rgba(144, 135, 135, 0.555);
     padding: 0;
     margin:0;
+}
+#home-carousel{
+    height: 30rem;
+    width: 100%;
+    object-fit: cover;
+}
+
+#pet-image-card{
+    height: 20rem;
+    width: 100%;
+    object-fit: cover;
+}
+#pet-card > a:visited, #pet-card > a:link{
+    color: black !important;
+}
+#pet-card > a:hover{
+    text-decoration: none;
+    color:#007bff!important ;
+}
+
+.badge-tag-pets{
+    background-color: #03a9f4;
+}
+
+footer{
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
 }

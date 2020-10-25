@@ -5,12 +5,15 @@ from django.utils.html import mark_safe
 from django.utils import timezone
 from django.urls import reverse
 from django.db import models
+from PIL import Image
 
 class Shelter(models.Model):
     name = models.CharField(max_length=60, unique=True)
+    about = models.CharField(max_length=300, default="Add something about your shelter")
     location = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank="True")
     manager = models.ForeignKey(User, related_name="usuario", on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="shelter_imagen", default="default_shelter.jpg")
 
     def __str__(self):
         return self.name
@@ -21,7 +24,7 @@ class Shelter(models.Model):
         super(Shelter, self).save(*args, **kwargs)
 
     def countPets(self):
-        return Pet.objects.get(Shelter=self.name).count()
+        return Pet.objects.filter(shelter=self.id).count()
     
     def get_absolute_url(self):
         return reverse('shelter-detail', kwargs={'slug':self.slug})
@@ -41,7 +44,7 @@ class Pet(models.Model):
         ("Cat", "Cat"),
         ("Dog", "Dog"),
         ("Guinea pig", "Guinea pig"),
-        ("Rabit", "Rabit"),
+        ("Rabbit", "Rabbit"),
         ("Other", "Other")
     )
     COLOR = (
@@ -68,7 +71,8 @@ class Pet(models.Model):
         return self.name
     
     def save(self, *args, **kwargs):
-        self.slug = slugify(f"Adopt {self.name} {get_random_string(length=5)}")        
+        if self.slug == "":
+            self.slug = slugify(f"Adopt {self.name} {get_random_string(length=5)}")        
         super(Pet, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -79,14 +83,10 @@ class Pet(models.Model):
             return Images.objects.filter(pet=self, mainPic=True).first().image.url
         return "/media/pet_imagen/default.jpg"
 
-    def petAllPics(self):        
-        return self.related.all()
- 
     @property
     def thumbnail_preview_list(self):    
         if self.petMainPic:
             try:
-                print(self.petMainPic())
                 return mark_safe('<img src="{}" width="40px" height="30px" class="img-thumbnail" />'.format(self.petMainPic()))
             except Exception as e :
                 pass
@@ -102,12 +102,29 @@ class Pet(models.Model):
     def getShelter(self):
         return self.shelter.name
 
+    def getAllFeatures(self):
+        return Feature.objects.filter(pet=self)
+
+
 class Images(models.Model):
     
     name = models.CharField(max_length=60, default="", blank=True)
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name="pet_imagenes")
     image = models.ImageField(upload_to="pet_imagen")
     mainPic = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        # we resize the img
+        super().save(*args, **kwargs)
+        img = Image.open(self.image.path)
+
+        # if img.height > 300 or img.width > 300:
+        #     output_size = (300, 300)
+        #     img.thumbnail(output_size)
+        #     img.save(self.image.path)
+        output_size = (450, 450)
+        img.thumbnail(output_size)
+        img.save(self.image.path)
 
     def save(self, *args, **kwargs):
         if self.name == "":
@@ -124,7 +141,6 @@ class Images(models.Model):
     @property
     def thumbnail_preview_list(self):    
         return mark_safe('<img src="{}" width="40px" height="30px" class="img-thumbnail" />'.format(self.image.url))
-        
 
     def __str__(self):
         return self.name
@@ -149,4 +165,3 @@ class Feature(models.Model):
 
     def __str__(self):
         return self.name
-

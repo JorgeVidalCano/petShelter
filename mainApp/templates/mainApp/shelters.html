@@ -1,0 +1,24 @@
+{% extends "shareblocks/base.html" %}
+{% block content %}
+
+<section class="py-2 bg-light"> 
+    <div class="py-3 container">
+        <h1 class="my-4">Shelters</h1>
+            {% for s in shelter %}
+            <div class="row">
+            <div class="col-md-7">
+                <img class="img-fluid rounded mb-3 mb-md-0" src="{{ s.image.url }}" alt="{{ s.name }}">
+            </div>
+            <div class="col-md-5">
+                <h3>{{ s.name }}</h3>
+                <p>{{ s.about }}</p>
+                <p>It holds {{ s.countPets }} animals.</p>
+                <p>Location: {{ s.location }}</p>
+                <a class="btn btn-primary" href="#">View Project</a>
+            </div>
+            </div>
+            {% endfor %}
+  </div>
+</section>
+
+{% endblock content %}

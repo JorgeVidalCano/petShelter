@@ -1,21 +1,27 @@
-<h3 class="display-4 text-center"><a href="">{{CategoryName|title}}</a></h3>
-    <div class="row mx-3 general-row">
-      {% for pet in PetList %}
-      <div class="col-lg-2 col-md-4 col-sm-12">
-        <div class="card mb-4 box-shadow">
-          <img class="card-img-top" alt="{{ pet.images.name }}" src="{{ pet.petMainPic}}">
-          <div class="card-img-overlay">
-            <h3><span class="badge badge-primary {{ pet.status }}">{{ pet.status }}</span></h3>
-          </div>
-          <div class="card-body">
-            <p class="card-text"><b>{{ pet.name|title }}</b></p>
-            <p class="card-text">Place {{ pet.shelter.name|title }}</p>
-            <p class="card-text">Sex {{ pet.sex }}</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <small class="text-muted">{{ pet.date_created }}</small>
-            </div>
-          </div>
+{% if CategoryName %}
+<div class="col-12">
+  <h3 class="display-4 text-center"><a href="">{{CategoryName|title}}</a></h3>
+</div>
+{% endif %}
+<div class="row mx-3 general-row justify-content-center">
+  {% for pet in PetList %}
+  <div id="pet-card" class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+    <a href="{% url 'pet-detail' pet.slug %}">
+    <div class="card mb-4" id="box-shadow">
+      <img id="pet-image-card" class="card-img-top" alt="{{ pet.images.name }}" src="{{ pet.petMainPic}}">
+      <div class="card-img-overlay">
+        <h3><span class="badge badge-primary {{ pet.status }}">{{ pet.status }}</span></h3>
+      </div>
+      <div class="card-body">
+        <p class="card-text"><b>{{ pet.name|title }}</b></p>
+        <p class="card-text">Place {{ pet.shelter.name|title }}</p>
+        <p class="card-text">Sex {{ pet.sex }}</p>
+        <div class="d-flex justify-content-between align-items-center">
+          <small class="text-muted">{{ pet.date_created }}</small>
         </div>
-      </div> 
-      {% endfor %}      
+      </div>
     </div>
+  </a>
+  </div> 
+  {% endfor %}      
+</div>
