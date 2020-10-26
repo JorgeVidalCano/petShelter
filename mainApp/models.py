@@ -89,6 +89,11 @@ class Pet(models.Model):
             return Images.objects.filter(pet=self, mainPic=True).first().image.url
         return "/media/pet_imagen/default.jpg"
 
+    def petAllPic(self):
+        if Images.objects.filter(pet=self).count() > 0:
+            return Images.objects.filter(pet=self)
+        return ""
+
     @property
     def thumbnail_preview_list(self):    
         if self.petMainPic:
@@ -96,7 +101,6 @@ class Pet(models.Model):
                 return mark_safe('<img src="{}" width="40px" height="30px" class="img-thumbnail" />'.format(self.petMainPic()))
             except Exception as e :
                 pass
-
         return ""
 
     def countPets(self):

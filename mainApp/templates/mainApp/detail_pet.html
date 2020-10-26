@@ -5,10 +5,8 @@
     <div class="container">
     <h1 class="my-4">Know more about <b>{{object.name.title}}</b></h1>
     <div class="row">
-      <div class="col-md-8">
-        <img class="img-fluid" style="width: auto; max-width: 80%; height: 450px;" src="{{ object.petMainPic }}" alt="{{ object.kind }}">
-      </div>
-  
+
+      {% include "mainApp/detail_pet_img.html" %} 
       <div class="col-md-4">
         <h4 class="h4">Shelter</h4>
         <p>I live in <b>
@@ -35,3 +33,7 @@
 </section>
 
 {% endblock content %}
+{% load static %}
+{% block js %} 
+    <script type="text/javascript" src="{% static 'mainApp/javascript/detail_pet_img.js' %}"></script>
+{% endblock js %}
