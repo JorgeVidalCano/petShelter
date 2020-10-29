@@ -5,10 +5,11 @@ $(document).ready(function () {
   
   $(window).on("scroll", function(){
       if(call == true){
-          if( $(this).scrollTop() > ($(document).height()*0.40).toFixed(0) & end == false) {
+          if( $(this).scrollTop() > ($(document).height()*0.20).toFixed(0) & end == false) {
               call = false;
               c ++
               var $endpoint = window.location.origin + "/lazyReload/" + c + window.location.href.slice(window.location.origin.length, -1)
+              
               var $formData = $(this).serialize();
               $.ajax({
                 method: "GET",

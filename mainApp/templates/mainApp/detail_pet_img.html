@@ -1,18 +1,23 @@
 <div id="MainCarousel" class="carousel slide" data-ride="carousel">
-    <div class="carousel-inner">
-        {% for p in object.petAllPic %}
-      <div class="carousel-item {% if forloop.counter0 == 0 %} active {% endif %}">
-        <img id="home-carousel" class="d-block" src="{{ p.image.url }}" alt="at">
-      </div>
-        {% endfor %}
-      
+  <div class="carousel-inner p-2">
+    <div class="carousel-item active">
+    
+      {% for p in object.petAllPic %}
+    <div class="carousel-item {% if forloop.counter0 == 0 %} active {% endif %}">
+      <img id="home-carousel" class="d-block" src="{{ p.image.url }}" alt="at">
     </div>
-    <a class="carousel-control-prev" href="#MainCarousel" role="button" data-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#MainCarousel" role="button" data-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="sr-only">Next</span>
-    </a>
+      {% endfor %}
   </div>
+  
+  {% if object.petAllPic.count != 1 %}
+  <a class="carousel-control-prev" href="#MainCarousel" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#MainCarousel" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+  {% endif %}
+</div>
+</div>

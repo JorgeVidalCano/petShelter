@@ -5,10 +5,10 @@
     <div class="container">
     <h1 class="my-4"><b>{{ object.name|title }}</b></h1>
     <div class="row">
-      <div class="col-md-8">
-        <img class="img-fluid" style="width: auto; max-width: 80%; height: 450px;" src="{{ object.image.url }}" alt="{{ object.name }} {{ object.location }}">
+      <div class="col-md-8 col-sm-12">
+        <img class="img-fluid img-carousel-shelter" src="{{ object.image.url }}" alt="{{ object.name }} {{ object.location }}">
       </div>
-      <div class="col-md-4">
+      <div class="col-md-4 col-sm-12">
         <h4 class="h4">About us</h4>
         <p>{{ object.about|capfirst }}</p>
         <h4 class="h4">Adoptions</h4>
@@ -21,7 +21,7 @@
     </div>
   </div>    
   <div class="container-fluid">
-      {% include "mainApp/pet_card.html" with CategoryName="Similar Pets" PetList=related_pets %} 
+      {% include "mainApp/pet_card.html" with CategoryName="All Pets" PetList=pets %} 
   </div>  
 </section>
 

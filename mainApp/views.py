@@ -14,7 +14,7 @@ import json
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 
-ROWPET = 4 # amount of pets per row
+ROWPET = 3 # amount of pets per row
 
 class HomeView(TemplateView):
     template_name = "mainApp/home.html"
@@ -94,8 +94,8 @@ class DetailShelterView(DetailView):
 
         context['AmountInAdoption'] =  kwargs['object'].AmountInAdoption()
         context['total'] = kwargs['object'].countPets()
-        print(context)
-        return context
+
+        context['pets'] = Pet.objects.filter(shelter=kwargs['object']).order_by('-date_created')[:ROWPET]
 
         return context
 
@@ -103,23 +103,18 @@ class LazyReload(ListView):
 
     def get(self, request, *args, **kwargs):
         
-         if self.request.is_ajax() and self.request.method == "GET":
-            
+        if self.request.is_ajax() and self.request.method == "GET":
+
             filters = {
                 "status__in":["Urgent","Adoption"]
             }
-            excludes = {}
-            
-            # excludes = {
-            #     "id":[load the list of animals]
-            # }
 
-            # if self.kwargs.get("tag") is not None:
-                # tag = TagPost.objects.get(slug=slugify(self.kwargs.get('tag')))
-                # filters["tags"] = tag
-
+            if self.kwargs.get("slug") is not None:
+                # if we have a slug means we are in shelter, so we get rid of the first 4 
+                # to avoid repetitions
+                filters["shelter__slug"] = self.kwargs.get("slug")
             try:
-                self.pet_list = Pet.objects.filter(**filters).exclude(**excludes).order_by('-date_created')
+                self.pet_list = Pet.objects.filter(**filters).order_by("?")
                 self.page = self.selectPetsByPage(self.pet_list)
                 ser_instance = self.getPets(self.page)
                 return JsonResponse({"instance": ser_instance, "end": False}, status=200)
@@ -130,7 +125,8 @@ class LazyReload(ListView):
     def selectPetsByPage(self, pet_list):
         # we select the next 5 pets
         numberPage = self.kwargs.get("page")
-        splitPag = Paginator(self.pet_list, 5)
+
+        splitPag = Paginator(self.pet_list, round(self.pet_list.count()/5))
         self.page = splitPag.page(numberPage)
         
         return self.page
