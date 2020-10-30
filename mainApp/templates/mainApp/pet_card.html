@@ -1,5 +1,5 @@
 
-<div class="pt-2 col-12">
+<div class="pt-1 col-12">
   {% if linkTo %}
     <h3 class="display-4 text-center">
       <a class="removeHoverLink" href="{% url 'shelter-detail' linkTo.slug %}">{{CategoryName|title}}</a>
@@ -13,7 +13,7 @@
   {% for pet in PetList %}
   <div id="pet-card" class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
     <a href="{% url 'pet-detail' pet.slug %}">
-    <div class="card mb-4" id="box-shadow">
+    <div class="card mb-4 box-shadow" >
       <img id="pet-image-card" class="card-img-top border border-rounded" alt="{{ pet.images.name }}" src="{{ pet.petMainPic}}">
       <div class="card-img-overlay">
         <h3><span class="badge badge-primary {{ pet.status }}">{{ pet.status }}</span></h3>

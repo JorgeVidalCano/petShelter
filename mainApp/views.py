@@ -13,6 +13,7 @@ import copy
 import json
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from .forms import ShelterForm
 
 ROWPET = 3 # amount of pets per row
 
@@ -46,7 +47,7 @@ class HomeView(TemplateView):
             context['petShelter2'] = Pet.objects.filter(**filters)[:ROWPET]
             context['slugShelter2'] = shelterCopy[1]
 
-            return context
+        return context
 
 class DetailPetView(DetailView):
     template_name = "mainApp/detail_pet.html"
@@ -98,6 +99,36 @@ class DetailShelterView(DetailView):
         context['pets'] = Pet.objects.filter(shelter=kwargs['object']).order_by('-date_created')[:ROWPET]
 
         return context
+
+class CreateShelterView(CreateView):
+    #permision_required = ""
+    template_name = "forms/shelter.html"
+    form_class = ShelterForm
+    model = Shelter
+    
+    def get_context_data(self, **kwargs):
+        # Retrieves initial data
+        context = super().get_context_data(**kwargs)
+        # adds new data
+        context['titleTab'] = 'Create New shelter'
+        
+        return context
+
+    def form_valid(self, form):
+        # Adds the author to the post
+        #form.instance.author = self.request.user
+        super().form_valid(form)
+        
+    
+        # only access if some pic is uploaded
+        if bool(self.request.FILES):
+            form.instance.image = self.request.FILES['image']
+        form.instance.slug = self.slugifier(self.request.POST['name'])
+        return super().form_valid(form)
+
+
+    
+    
 
 class LazyReload(ListView):
 

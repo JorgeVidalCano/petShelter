@@ -1,37 +1,34 @@
 {% extends "shareblocks/base.html" %}
 {% block content %}
-
-<section class="py-2 bg-light"> 
-    <div class="container">
-    <h1 class="my-4">Know more about <b>{{object.name.title}}</b></h1>
-    <div class="row">
-      <div class="col-md-8">
-      {% include "mainApp/detail_pet_img.html" %} 
-      </div>
-      <div class="col-md-4">
-        <h4 class="h4">Shelter</h4>
-        <p>I live in <b>
-          <a class="removeHoverLink badge badge-primary p-2" href="{% url 'shelter-detail' object.shelter.slug %}">{{ object.shelter.name|title }}</a>
-        </b></p>
-        <h4 class="h4">About me</h4>
-        <p>{{ object.about|capfirst }}</p>
-        <h4 class="h4"> {{object.name.title}}'s details</h4>
-
-        <p>I'm a {{ object.sex }}, {{ object.age }} years old and I weight {{ object.weight }}.</p>
-        <div class="p-4 mb-2 rounded-pill border" style="background-color: {{ object.color }}"></div>
-        <p>I'm looking for a new family since {{ object.date_created }}</p>
-        <ul class="list-unstyled">
-            {% for f in object.getAllFeatures %}
-            <li class="badge badge-tag-pets p-2">{{f}}</li>
-            {% endfor %}
-        </ul>
-      </div>
+<div class="container">
+  <h1 class="display-4">Know more about <b>{{object.name.title}}</b></h1>
+  <div class="row">
+    <div class="col-md-8">
+    {% include "mainApp/detail_pet_img.html" %} 
     </div>
-  </div>    
-  <div class="container-fluid">
-      {% include "mainApp/pet_card.html" with CategoryName="Similar Pets" PetList=related_pets %} 
-  </div>  
-</section>
+    <div class="col-md-4">
+      <h4 class="h4">Shelter</h4>
+      <p>I live in <b>
+        <a class="removeHoverLink badge badge-primary p-2" href="{% url 'shelter-detail' object.shelter.slug %}">{{ object.shelter.name|title }}</a>
+      </b></p>
+      <h4 class="h4">About me</h4>
+      <p>{{ object.about|capfirst }}</p>
+      <h4 class="h4"> {{object.name.title}}'s details</h4>
+
+      <p>I'm a {{ object.sex }}, {{ object.age }} years old and I weight {{ object.weight }}.</p>
+      <div class="p-4 mb-2 rounded-pill border" style="background-color: {{ object.color }}"></div>
+      <p>I'm looking for a new family since {{ object.date_created }}</p>
+      <ul class="list-unstyled">
+          {% for f in object.getAllFeatures %}
+          <li class="badge badge-tag-pets p-2">{{f}}</li>
+          {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>    
+<div class="container-fluid">
+    {% include "mainApp/pet_card.html" with CategoryName="Similar Pets" PetList=related_pets %} 
+</div>  
 
 {% endblock content %}
 {% load static %}

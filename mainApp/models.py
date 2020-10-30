@@ -9,12 +9,13 @@ from PIL import Image
 
 class Shelter(models.Model):
     name = models.CharField(max_length=60, unique=True)
-    about = models.CharField(max_length=300, default="Add something about your shelter")
+    about = models.TextField(max_length=300)
     location = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank="True")
     manager = models.ForeignKey(User, related_name="usuario", on_delete=models.CASCADE)
     image = models.ImageField(upload_to="shelter_imagen", default="default_shelter.jpg")
-
+    date_created = models.DateField(default=timezone.now)
+    
     def __str__(self):
         return self.name
     
@@ -68,7 +69,7 @@ class Pet(models.Model):
     color = models.CharField(max_length=7, choices=COLOR, default="FFF")
     shelter = models.ForeignKey(Shelter, related_name="albergue", default=None, on_delete=models.CASCADE)
     date_created = models.DateField(default=timezone.now)
-    slug = models.SlugField(unique=True, blank=True) #blank is true but is changed before saving the pet
+    slug = models.SlugField(unique=True, blank=True) #blank is true but slug is assigned before saving the pet
 
     def __str__(self):
         return self.name

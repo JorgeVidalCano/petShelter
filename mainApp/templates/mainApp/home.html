@@ -4,12 +4,10 @@
 {% load carousel %}
 {% carousel %}
 
-<section class="py-3 bg-light"> 
-  <div class="container-fluid">
+<div class="container-fluid">
     {% include "mainApp/pet_card.html" with CategoryName=shelterName1 PetList=petShelter1 linkTo=slugShelter1 %}
     {% include "mainApp/pet_card.html" with CategoryName=shelterName2 PetList=petShelter2 linkTo=slugShelter2 %}
     {% include "mainApp/pet_card.html" with CategoryName="All pets" PetList=pets %}
-  </div>
-</section>
+</div>
 
 {% endblock content %}

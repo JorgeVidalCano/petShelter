@@ -15,8 +15,10 @@
 .badge-primary.Adoption{ 
     background-color: #0c7aad
 }
-
-#box-shadow:hover{
+.box-shadow{
+    box-shadow: 0 6px 10px 0 rgba(61, 76, 80, 0.4), 0 6px 20px 0 rgba(24, 70, 99, 0.4)
+}
+.box-shadow:hover{
     box-shadow: 0 6px 10px 0 rgba(61, 76, 80, 0.4), 0 6px 20px 0 rgba(24, 70, 99, 0.4)
 }
 
