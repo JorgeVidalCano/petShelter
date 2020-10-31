@@ -25,6 +25,5 @@ class ShelterForm(ModelForm):
             'location': forms.TextInput(attrs={ 'class':'form-control mb-4', 
                                             'placeholder': 'Where is your shelter?'}
                     ),
-            'image': forms.ImageField(attrs={"upload_to":"images/"}) 
-  )
+            #'image': forms.ImageField()
             }

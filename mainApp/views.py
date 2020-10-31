@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.views.generic import(
      ListView, 
@@ -100,7 +101,7 @@ class DetailShelterView(DetailView):
 
         return context
 
-class CreateShelterView(CreateView):
+class CreateShelterView(LoginRequiredMixin, CreateView):
     #permision_required = ""
     template_name = "forms/shelter.html"
     form_class = ShelterForm
@@ -116,14 +117,14 @@ class CreateShelterView(CreateView):
 
     def form_valid(self, form):
         # Adds the author to the post
-        #form.instance.author = self.request.user
+        form.instance.manager = self.request.user
+
         super().form_valid(form)
         
     
         # only access if some pic is uploaded
         if bool(self.request.FILES):
             form.instance.image = self.request.FILES['image']
-        form.instance.slug = self.slugifier(self.request.POST['name'])
         return super().form_valid(form)
 
 
