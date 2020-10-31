@@ -12,26 +12,30 @@ class Shelter(models.Model):
     about = models.TextField(max_length=300)
     location = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank="True")
-    manager = models.ForeignKey(User, related_name="usuario", on_delete=models.CASCADE)
+    manager = models.OneToOneField(User, related_name="usuario", on_delete=models.CASCADE)
     image = models.ImageField(upload_to="shelter_imagen", default="default_shelter.jpg")
     date_created = models.DateField(default=timezone.now)
     
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('profile-shelter', kwargs={'slug':self.slug})
     
     def save(self, *args, **kwargs):
-        # creates a unique slug
-        self.slug = slugify(f"{self.name}")
-        super(Shelter, self).save(*args, **kwargs)
+       # creates a unique slug
+       self.slug = slugify(f"{self.name}")
+       super(Shelter, self).save(*args, **kwargs)
 
     def countPets(self):
         return Pet.objects.filter(shelter=self.id).count()
+    
+    def Adopted(self):
+        return Pet.objects.filter(shelter=self.id, status="Adopted").count()
 
     def AmountInAdoption(self):
         return Pet.objects.filter(shelter=self.id, status__in=["Urgent","Adoption"]).count()
 
-    def get_absolute_url(self):
-        return reverse('shelter-detail', kwargs={'slug':self.slug})
 
 class Pet(models.Model):
     SEX = (

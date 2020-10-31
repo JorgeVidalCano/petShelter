@@ -1,0 +1,21 @@
+{% extends "profile/baseProfile.html" %}
+{% block profile %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <h1 class="display-3 my-2">{{ object.name }}</h1>
+        <div class="container">
+            <div class="row justify-content">
+                <div class="col-">
+                    <p class="text-h3">From this menu you can update your shelter profile beside adding more pets to your shelter and check messages.</p>
+                    <h6 class="display-4">Summarize</h6>
+                    <p class="text-h4">Total pets: <b>{{ object.countPets }}</b></p>
+                    <p class="text-h4">In adoption: <b>{{ object.AmountInAdoption }}</b></p>
+                    <p class="text-h4">Already adopted: <b>{{ object.Adopted }}</b></p>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock profile %}

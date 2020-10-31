@@ -1,4 +1,9 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.template.defaultfilters import slugify
+from django.http import HttpResponseRedirect
+from django.db import IntegrityError
+from django.urls import reverse_lazy, reverse
+from django.contrib import messages
 from django.shortcuts import render
 from django.views.generic import(
      ListView, 
@@ -16,7 +21,7 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from .forms import ShelterForm
 
-ROWPET = 3 # amount of pets per row
+ROWPET = 3 # Const. amount of pets per row
 
 class HomeView(TemplateView):
     template_name = "mainApp/home.html"
@@ -112,24 +117,85 @@ class CreateShelterView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         # adds new data
         context['titleTab'] = 'Create New shelter'
-        
+        context['titleFormShelter'] = "Adoption Shelter"
+        context['paragraph'] = 'Fill the required info for your shelter'
         return context
-
+    
     def form_valid(self, form):
         # Adds the author to the post
         form.instance.manager = self.request.user
-
-        super().form_valid(form)
         
-    
         # only access if some pic is uploaded
         if bool(self.request.FILES):
             form.instance.image = self.request.FILES['image']
         return super().form_valid(form)
 
+    def post(self, request, *args, **kwargs):
+        try:
+            super().post(request, *args, **kwargs)
+            return HttpResponseRedirect(self.get_success_url())
+        except IntegrityError:
+            messages.add_message(request, messages.ERROR, f'Sorry {self.request.user} but only one shelter is allowed per account.')
+            return render(request, template_name=self.template_name, context=self.get_context_data())
+    
+class UpdateShelterView(LoginRequiredMixin, UpdateView):
+    #permision_required = ""
+    template_name = "profile/profile_shelter.html"
+    form_class = ShelterForm
+    model = Shelter
+    
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super().get_context_data(**kwargs)
+        nameShelter = context['object'].name
+        context['titleTab'] = nameShelter
+        context['titleFormShelter'] = nameShelter
+        return context
+        
+class ProfileOptionsShelter(LoginRequiredMixin, TemplateView):
+    template_name = "profile/profileOptions.html"
+    model = Shelter
+    
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super().get_context_data(**kwargs)
+        context['titleTab'] = 'Options'
+        context['object'] = Shelter.objects.get(manager= self.request.user)
+        return context
 
+class DeleteShelterView(LoginRequiredMixin, DeleteView):
+    model = Shelter
+    success_url = "/"
     
-    
+    # def get_context_data(self, **kwargs):
+    #     # Call the base implementation first to get a context
+    #     context = super().get_context_data(**kwargs)
+    #     context['titleTab'] = 'Deleting your shelter'
+    #     return context
+
+    # def test_func(self):
+    #     # Overriden func. Checks that the user is the author
+    #     shelter = self.get_object()
+    #     if self.request.user == shelter.manager:
+    #         return True
+    #     return False
+
+
+class ListShelterPetsView(LoginRequiredMixin, ListView):
+    pass
+
+class BaseProfileView (LoginRequiredMixin, TemplateView):
+    template_name = "profile/profileSummarize.html"
+    model = Shelter
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super().get_context_data(**kwargs)
+        shelter = Shelter.objects.get(manager= self.request.user)
+        context['titleTab'] = f'Your {shelter.name}'
+        context['object'] = shelter
+        return context
+
 
 class LazyReload(ListView):
 
