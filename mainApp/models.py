@@ -36,6 +36,8 @@ class Shelter(models.Model):
     def AmountInAdoption(self):
         return Pet.objects.filter(shelter=self.id, status__in=["Urgent","Adoption"]).count()
 
+    def getAllPets(self):
+        return Pet.objects.filter(shelter=self.id)
 
 class Pet(models.Model):
     SEX = (
@@ -98,6 +100,9 @@ class Pet(models.Model):
         if Images.objects.filter(pet=self).count() > 0:
             return Images.objects.filter(pet=self)
         return ""
+    
+    def allFeatures(self):
+        return Feature.objects.filter(pet=self.id)
 
     @property
     def thumbnail_preview_list(self):    

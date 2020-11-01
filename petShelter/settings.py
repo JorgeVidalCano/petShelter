@@ -57,6 +57,7 @@ TEMPLATES = [
         'DIRS': [
             'mainApp/',
             'carousel/',
+            'users/',
             ],
         'APP_DIRS': True,
         'OPTIONS': {

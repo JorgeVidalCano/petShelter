@@ -3,7 +3,7 @@
 
 <div class="container">
     <div class="row">
-      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-info sidebar collapse">
+      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-info sidebar collapse min-vh-100">
         <div class="sidebar-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item" style="background-color: bisque;">
@@ -14,6 +14,9 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'profile-options' object.slug %}">Account options</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link bg-danger" href="{% url 'delete-profile' object.slug %}">Delete Account</a>
             </li>
           </ul>
         </div>

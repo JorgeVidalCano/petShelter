@@ -1,0 +1,17 @@
+{% extends "profile/baseProfile.html" %}
+
+{% block profile %}
+<main role="main" class="col-12">   
+    <h1 class="display-3 my-2">Delete Shelter</h1>
+    <form method="POST">
+        <p class="text-h4"> Are you sure you want to delete your shelter? All pets will be deleted.</p2>
+        {% csrf_token %}
+        <div class="media mb-4">
+            <div class="media-body">
+                <button class="btn btn-outline-danger" type="submit">Delete</button>
+            </div>
+        </div>
+    </form>
+</main>
+        
+{% endblock profile %}

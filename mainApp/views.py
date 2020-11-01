@@ -1,8 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.template.defaultfilters import slugify
-from django.http import HttpResponseRedirect
-from django.db import IntegrityError
 from django.urls import reverse_lazy, reverse
+from django.http import HttpResponseRedirect
+from django.contrib.auth.models import User
+from users.forms import UserUpdateForm
+from django.db import IntegrityError
 from django.contrib import messages
 from django.shortcuts import render
 from django.views.generic import(
@@ -11,15 +13,14 @@ from django.views.generic import(
      CreateView,
      UpdateView,
      DeleteView,
-     RedirectView,
      TemplateView
     )
+from django.core.paginator import Paginator
+from .forms import ShelterForm, PetForm
+from django.http import JsonResponse
 from .models import Pet, Shelter
 import copy
 import json
-from django.core.paginator import Paginator
-from django.http import JsonResponse
-from .forms import ShelterForm
 
 ROWPET = 3 # Const. amount of pets per row
 
@@ -147,42 +148,91 @@ class UpdateShelterView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get the context
         context = super().get_context_data(**kwargs)
-        nameShelter = context['object'].name
-        context['titleTab'] = nameShelter
-        context['titleFormShelter'] = nameShelter
+        context['titleTab'] = context['object'].name
+        context['titleFormShelter'] = context['object'].name
         return context
         
-class ProfileOptionsShelter(LoginRequiredMixin, TemplateView):
+class ProfileOptionsShelter(LoginRequiredMixin, UpdateView):
     template_name = "profile/profileOptions.html"
-    model = Shelter
+    form_class = UserUpdateForm
+    model = User
     
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get the context
         context = super().get_context_data(**kwargs)
         context['titleTab'] = 'Options'
-        context['object'] = Shelter.objects.get(manager= self.request.user)
+        #context['object'] = Shelter.objects.get(manager= self.request.user)
+        
         return context
 
 class DeleteShelterView(LoginRequiredMixin, DeleteView):
+    template_name = "forms/shelter_confirm_delete.html"
     model = Shelter
     success_url = "/"
     
-    # def get_context_data(self, **kwargs):
-    #     # Call the base implementation first to get a context
-    #     context = super().get_context_data(**kwargs)
-    #     context['titleTab'] = 'Deleting your shelter'
-    #     return context
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        context['titleTab'] = 'Deleting your shelter'
+        return context
 
-    # def test_func(self):
-    #     # Overriden func. Checks that the user is the author
-    #     shelter = self.get_object()
-    #     if self.request.user == shelter.manager:
-    #         return True
-    #     return False
+    def test_func(self):
+        # Overriden func. Checks that the user is the author
+        shelter = self.get_object()
+        if self.request.user == shelter.manager:
+            return True
+        return False
 
+class ListPetsView(LoginRequiredMixin, ListView):
+    template_name = "profile/listPets.html"
+    ordering = ['date_created']
+    form_model = PetForm
+    Model = Shelter
 
-class ListShelterPetsView(LoginRequiredMixin, ListView):
+    def get_queryset(self):
+        ordering = ['date_created']
+        return Pet.objects.filter(shelter__slug=self.request.user).order_by('-date_created')
+
+    def get_context_data(self, **kwargs):
+        # Retrieves initial data
+        context = super().get_context_data(**kwargs)
+        # adds new data
+        context['titleTab'] = 'Pets'
+        context['titlePage'] = 'All Pets in your shelter'
+        context['object'] = Shelter.objects.get(manager= self.request.user)
+        context['pets'] = context['object'].getAllPets()
+        return context
+
+class CreatePetProfileView(LoginRequiredMixin, CreateView):
     pass
+
+class DetailPetProfileView(LoginRequiredMixin, UpdateView):
+    template_name = "profile/profile_pet.html"
+    form_class = PetForm
+    model = Pet
+    #context_object_name = 'posts'
+
+    def get_context_data(self, **kwargs):
+        # Retrieves initial data
+        context = super().get_context_data(**kwargs)
+        # adds new data
+        petName = context['object'].name.title()
+        context['titleTab'] = f'{petName} pet'
+        context['object'] = Shelter.objects.get(manager= self.request.user)
+        context['buttonName'] = f'Update {petName}'
+        return context
+
+    def get_object(self, queryset=None):
+        #https://stackoverflow.com/questions/57614381/generic-detail-view-postdetailview-must-be-called-with-either-an-object-pk-or-a
+        # Since I'm using 2 variables in the url, django
+        # doesn't know how to use the second one.
+        if queryset is None:
+            queryset = self.get_queryset()
+        new_str = self.kwargs.get('pet') or self.request.GET.get('pet') or None
+
+        queryset = queryset.filter(slug=new_str)
+        obj = queryset.get()
+        return obj
 
 class BaseProfileView (LoginRequiredMixin, TemplateView):
     template_name = "profile/profileSummarize.html"

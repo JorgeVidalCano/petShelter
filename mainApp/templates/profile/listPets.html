@@ -1,0 +1,34 @@
+{% extends "profile/baseProfile.html" %}
+{% block profile %}
+<div class="pt-3">
+    <table class="table table-striped table-sm table-hover">
+        <thead>
+            <tr class="table-info">
+                <th>Name</th>
+                <th>Kind</th>
+                <th>Sex</th>
+                <th>Age</th>
+                <th>weight</th>
+                <th>Visits</th>
+                <th>Status</th>
+                <th>Date created</th>
+            </tr>
+        </thead>
+        <tbody class="">
+            {% for p in pets %}
+            <tr>
+                <td><a class="removeHoverLink" href="{% url 'pet-profile-detail' object.slug p.slug %}">{{p.name|title}}</a></td>
+                <td>{{p.kind}}</td>
+                <td>{{p.sex}}</td>
+                <td>{{p.age}}</td>
+                <td>{{p.weight}}</td>
+                <td>{{p.visits}}</td>
+                <td class="badge-primary {{ p.status }}">{{p.status}}</td>
+                <td>{{p.date_created}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+      
+{% endblock profile %}

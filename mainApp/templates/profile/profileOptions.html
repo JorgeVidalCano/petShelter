@@ -1,11 +1,8 @@
 {% extends "profile/baseProfile.html" %}
 
 {% block profile %}
-
-      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-        <h1 class="display-3 my-2"></h1>
-
-      </main>
-    </div>
-  </div>
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+  <h1 class="display-3 my-2">Personal info</h1>
+  {% include "forms/userForm.html" with buttonName="Update personal info" colSize=12 %}
+</main>
 {% endblock profile %}
