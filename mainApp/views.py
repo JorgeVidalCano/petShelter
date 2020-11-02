@@ -16,9 +16,9 @@ from django.views.generic import(
      TemplateView
     )
 from django.core.paginator import Paginator
-from .forms import ShelterForm, PetForm
+from .forms import ShelterForm, PetForm#, featureFormInline
 from django.http import JsonResponse
-from .models import Pet, Shelter
+from .models import Pet, Shelter, Feature, Images
 import copy
 import json
 
@@ -206,11 +206,11 @@ class ListPetsView(LoginRequiredMixin, ListView):
 class CreatePetProfileView(LoginRequiredMixin, CreateView):
     pass
 
+from django.forms.models import inlineformset_factory
 class DetailPetProfileView(LoginRequiredMixin, UpdateView):
     template_name = "profile/profile_pet.html"
     form_class = PetForm
     model = Pet
-    #context_object_name = 'posts'
 
     def get_context_data(self, **kwargs):
         # Retrieves initial data
@@ -220,6 +220,7 @@ class DetailPetProfileView(LoginRequiredMixin, UpdateView):
         context['titleTab'] = f'{petName} pet'
         context['object'] = Shelter.objects.get(manager= self.request.user)
         context['buttonName'] = f'Update {petName}'
+        #context['formsetFe'] = featureFormInline(instance=self.object)
         return context
 
     def get_object(self, queryset=None):

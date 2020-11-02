@@ -76,6 +76,7 @@ class Pet(models.Model):
     shelter = models.ForeignKey(Shelter, related_name="albergue", default=None, on_delete=models.CASCADE)
     date_created = models.DateField(default=timezone.now)
     slug = models.SlugField(unique=True, blank=True) #blank is true but slug is assigned before saving the pet
+    features = models.ManyToManyField("Feature", related_name="pet_atributos_many", blank=True)
 
     def __str__(self):
         return self.name
@@ -176,7 +177,7 @@ class Feature(models.Model):
     # Then, only the admin will create, modify and delete them, otherwise, it's going to be annoying to create features
     # every shelter and many will be repeated.
     name = models.CharField(max_length=30, unique=True)
-    pet = models.ForeignKey(Pet, related_name="pet_atributos", on_delete=models.CASCADE, blank=True)
+    pet = models.ForeignKey(Pet, related_name="pet_atributo", on_delete=models.CASCADE, blank=True)
     description = models.CharField(max_length=60)
 
     def __str__(self):

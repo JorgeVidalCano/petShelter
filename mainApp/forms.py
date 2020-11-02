@@ -1,5 +1,7 @@
-from django.forms import ModelForm
+from django.forms.models import inlineformset_factory
 from .models import Shelter, Image, Pet, Feature
+from django.forms import BaseInlineFormSet
+from django.forms import ModelForm
 from django import forms
 
 # Create the form class.
@@ -25,14 +27,19 @@ class ShelterForm(forms.ModelForm):
             'location': forms.TextInput(attrs={ 'class':'form-control mb-4', 
                                             'placeholder': 'Where is your shelter?'}
                     ),
-            #'image': forms.ImageField()
+            'image': forms.FileInput(attrs={'class':'form-control-file'})
             }
 
-class PetForm(forms.ModelForm):
+class FeatureForm(BaseInlineFormSet):
+    pass
 
+#featureFormInline = inlineformset_factory(Pet, Image, fields=("name", "image"))#, extra= 4)
+
+class PetForm(forms.ModelForm):
+    
     class Meta:
         model = Pet
-        fields = ['name', 'about', 'sex', 'kind', 'weight', 'age', 'status', 'color']
+        fields = ['name', 'about', 'sex', 'kind', 'weight', 'age', 'status', 'color', 'features']
         SEX = (
             ('Male', 'Male'),
             ('Female', 'Female'),
@@ -71,9 +78,11 @@ class PetForm(forms.ModelForm):
             'kind': forms.Select(choices=TYPE, attrs={'class':'form-control mb-4'}),
             'status': forms.Select(choices=TYPE, attrs={'class':'form-control mb-4'}),
             'color': forms.Select(choices=TYPE, attrs={'class':'form-control mb-4'}),
-            #'features': forms.ModelMultipleChoiceField(queryset=Feature)
-            #'features': forms.CheckboxSelectMultiple(attrs = {'class':'checkbox-tag'}, queryset=Feature.objects.all, label="", required=False)
-            'features': forms.ModelChoiceField(queryset=Feature.objects.all(), label="", required=False)
+            'features':forms.CheckboxSelectMultiple(attrs={"queryset": Feature.objects.all(), 
+                                                            "required":False,
+                                                            "class": "form-check-input"})
         }
-        i still need to add the features and the imgs
-        
+
+                    # 'features':forms.ModelMultipleChoiceField(
+                    #                     widget= forms.CheckboxSelectMultiple(attrs = {'class':'checkbox-tag'}), 
+                    #                     queryset=Feature.objects.all(), label="", required=False)
