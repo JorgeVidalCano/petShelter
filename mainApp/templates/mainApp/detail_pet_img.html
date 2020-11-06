@@ -1,7 +1,5 @@
 <div id="MainCarousel" class="carousel slide" data-ride="carousel">
   <div class="carousel-inner p-2 box-shadow">
-    <div class="carousel-item active">
-    
       {% for p in object.petAllPic %}
     <div class="carousel-item {% if forloop.counter0 == 0 %} active {% endif %}">
       <img id="home-carousel" class="d-block" src="{{ p.image.url }}" alt="at">
@@ -20,4 +18,4 @@
   </a>
   {% endif %}
 </div>
-</div>
+

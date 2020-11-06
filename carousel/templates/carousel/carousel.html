@@ -1,5 +1,5 @@
 <div id="MainCarousel" class="carousel slide" data-ride="carousel">
-  <div class="carousel-inner">
+  <div class="carousel-inner p-2 box-shadow">
       {% for c in carouselImgs %}
     <div class="carousel-item {% if forloop.counter0 == 0 %} active {% endif %}">
       <img id="home-carousel" class="d-block" src="{{ c.image.url }}" alt="at">

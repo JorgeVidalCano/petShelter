@@ -83,7 +83,7 @@ class Pet(models.Model):
     
     def save(self, *args, **kwargs):
         if self.slug == "":
-            self.slug = slugify(f"Adopt {self.name} {get_random_string(length=5)}")        
+            self.slug = slugify(f"Adopt {self.name} {get_random_string(length=5)}")
         super(Pet, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -136,7 +136,7 @@ class Images(models.Model):
 
     def save(self, *args, **kwargs):
         if self.name == "":
-            self.name = self.image.url.split("/")[-1]
+            self.name = get_random_string(length=7)
         super(Images, self).save(*args, **kwargs)
         img = Image.open(self.image.path)
 

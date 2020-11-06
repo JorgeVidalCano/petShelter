@@ -1,10 +1,8 @@
-from django.forms.models import inlineformset_factory
-from .models import Shelter, Image, Pet, Feature
-from django.forms import BaseInlineFormSet
+from django.forms.models import formset_factory
+from .models import Shelter, Images, Pet, Feature
 from django.forms import ModelForm
 from django import forms
 
-# Create the form class.
 class ShelterForm(forms.ModelForm):
     class Meta:
         model = Shelter
@@ -29,11 +27,6 @@ class ShelterForm(forms.ModelForm):
                     ),
             'image': forms.FileInput(attrs={'class':'form-control-file'})
             }
-
-class FeatureForm(BaseInlineFormSet):
-    pass
-
-#featureFormInline = inlineformset_factory(Pet, Image, fields=("name", "image"))#, extra= 4)
 
 class PetForm(forms.ModelForm):
     
@@ -80,9 +73,20 @@ class PetForm(forms.ModelForm):
             'color': forms.Select(choices=TYPE, attrs={'class':'form-control mb-4'}),
             'features':forms.CheckboxSelectMultiple(attrs={"queryset": Feature.objects.all(), 
                                                             "required":False,
-                                                            "class": "form-check-input"})
+                                                            "class": ""}),          
         }
 
-                    # 'features':forms.ModelMultipleChoiceField(
-                    #                     widget= forms.CheckboxSelectMultiple(attrs = {'class':'checkbox-tag'}), 
-                    #                     queryset=Feature.objects.all(), label="", required=False)
+class ImageForm(forms.ModelForm):
+    class Meta:
+        model = Images
+        fields = ["id", "mainPic", "image"]
+        
+        widgets={
+            'mainPic': forms.CheckboxInput(attrs={'class': 'form-check-label'}),
+            'image': forms.FileInput(attrs={'class':'form-control-file', 
+                                            'upload_to': 'pet_imagen'}),
+            'id': forms.HiddenInput()
+        },
+        labels={"mainPic": "Main image", "image": ""}
+
+petImageFormset = formset_factory(ImageForm, can_delete=True,extra=3, max_num=3)

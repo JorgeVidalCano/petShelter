@@ -18,6 +18,16 @@
                     {% csrf_token %}
                         <div class="col-{{colSize}} mt-4">
                             {{ form }}
+
+                            {{ formsetImg.management_form }}
+                            {% for f in formsetImg %}
+                            {{ f.image }}
+        
+                            <p>
+                                <label for="{{f.mainPic.label}}">{{f.mainPic.label}}</label>
+                                {{ f.mainPic }}
+                            </p>
+                            {% endfor %}
                         </div>
                         {% if object.image.url %}
                         <div class="col-{{colSize}} my-4 border-round">
