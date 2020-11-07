@@ -16,7 +16,7 @@ from django.views.generic import(
      TemplateView
     )
 from django.core.paginator import Paginator
-from .forms import ShelterForm, PetForm#, featureFormInline
+from .forms import ShelterForm, PetForm, ImageForm
 from django.http import JsonResponse
 from .models import Pet, Shelter, Feature, Images
 import copy
@@ -107,6 +107,18 @@ class DetailShelterView(DetailView):
 
         return context
 
+class BaseProfileView (LoginRequiredMixin, TemplateView):
+    template_name = "profile/profileSummarize.html"
+    model = Shelter
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super().get_context_data(**kwargs)
+        shelter = Shelter.objects.get(manager= self.request.user)
+        context['titleTab'] = f'Your {shelter.name}'
+        context['object'] = shelter
+        return context
+
 class CreateShelterView(LoginRequiredMixin, CreateView):
     #permision_required = ""
     template_name = "forms/shelter.html"
@@ -152,19 +164,6 @@ class UpdateShelterView(LoginRequiredMixin, UpdateView):
         context['titleFormShelter'] = context['object'].name
         return context
         
-class ProfileOptionsShelter(LoginRequiredMixin, UpdateView):
-    template_name = "profile/profileOptions.html"
-    form_class = UserUpdateForm
-    model = User
-    
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get the context
-        context = super().get_context_data(**kwargs)
-        context['titleTab'] = 'Options'
-        #context['object'] = Shelter.objects.get(manager= self.request.user)
-        
-        return context
-
 class DeleteShelterView(LoginRequiredMixin, DeleteView):
     template_name = "forms/shelter_confirm_delete.html"
     model = Shelter
@@ -182,6 +181,19 @@ class DeleteShelterView(LoginRequiredMixin, DeleteView):
         if self.request.user == shelter.manager:
             return True
         return False
+
+class ProfileOptionsShelter(LoginRequiredMixin, UpdateView):
+    template_name = "profile/profileOptions.html"
+    form_class = UserUpdateForm
+    model = User
+    
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super().get_context_data(**kwargs)
+        context['titleTab'] = 'Options'
+        #context['object'] = Shelter.objects.get(manager= self.request.user)
+        
+        return context
 
 class ListPetsView(LoginRequiredMixin, ListView):
     template_name = "profile/listPets.html"
@@ -204,62 +216,34 @@ class ListPetsView(LoginRequiredMixin, ListView):
         return context
 
 class CreatePetProfileView(LoginRequiredMixin, CreateView):
-    pass
-
-from .forms import petImageFormset
-class DetailPetProfileView(LoginRequiredMixin, UpdateView):
-    template_name = "profile/profile_pet.html"
+    template_name = "profile/create_pet.html"
     form_class = PetForm
     model = Pet
-    
+
     def get_context_data(self, **kwargs):
         # Retrieves initial data
         context = super().get_context_data(**kwargs)
         # adds new data
-        petName = context['object'].name.title()
-        context['titleTab'] = f'{petName} pet'
+        context['titleTab'] = "New pet"
         context['object'] = Shelter.objects.get(manager= self.request.user)
-        context['buttonName'] = f'Update {petName}'
-
-        listImg = {}
-        for i, img in enumerate(Images.objects.filter(pet=self.object)):
-            listImg['id'+str(i)]= img.id
-            listImg['img'+str(i)]= img.image
-            listImg['mainPic'+str(i)]= img.mainPic
-
-        data = {
-                'form-TOTAL_FORMS':'2',
-                'form-INITIAL_FORMS':'2',
-                'form-MAX_NUM_FORMS': '2',
-                
-                # 'form-0-mainPic': '',
-                # 'form-0-image': '',
-                # 'form-0-id': '',
-                # 'form-0-DELETE': 'on',
-                
-                'form-0-mainPic': listImg['mainPic0'],
-                'form-0-image': listImg['img0'],
-                'form-0-id': listImg['id0'],
-                'form-0-DELETE': 'on',
-
-                # 'form-1-mainPic': listImg['mainPic1'],
-                # 'form-1-image': listImg['img1'],
-                # 'form-1-id': listImg['id1'],
-                # 'form-1-DELETE': 'on',
-                
-                # 'form-2-mainPic':listImg['mainPic2'],
-                # 'form-2-image': listImg['img2'],
-                # 'form-2-id': listImg['id2'],
-                # 'form-2-DELETE': 'on',
-
-            }
-        context['formsetImg'] = petImageFormset(data, initial=[
-                                # {'mainPic': d[0].image , 'image':d[0].mainPic},
-                                # {'mainPic': d[1].image , 'image':d[1].mainPic},
-                                ])
-    
+        # context['buttonName'] = 'Update {petName}'
+        
+        context['petImages'] = ''
         return context
 
+    def form_valid(self, form):
+        if form.is_valid():
+            form.instance.shelter= Shelter.objects.get(manager=self.request.user)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('pet-image-new', kwargs={'pet': str(self.object.slug)})
+
+class UpdatePetProfileView(LoginRequiredMixin, UpdateView):
+    template_name = "profile/profile_pet.html"
+    form_class = PetForm
+    model = Pet
+    
     def get_object(self, queryset=None):
         #https://stackoverflow.com/questions/57614381/generic-detail-view-postdetailview-must-be-called-with-either-an-object-pk-or-a
         # Since I'm using 2 variables in the url, django
@@ -272,31 +256,91 @@ class DetailPetProfileView(LoginRequiredMixin, UpdateView):
         obj = queryset.get()
         return obj
 
-    def form_valid(self, form):
-        
-        formset = petImageFormset(self.request.POST, self.request.FILES)
-        if formset.is_valid():
-            for f in formset.cleaned_data:
-                img = Images(pet=self.object, image=f['image'], mainPic=f['mainPic'])
-                img.save()
-
-        if form.is_valid():
-            form.save()
-        return super().form_valid(form)
-
-
-class BaseProfileView (LoginRequiredMixin, TemplateView):
-    template_name = "profile/profileSummarize.html"
-    model = Shelter
-
     def get_context_data(self, **kwargs):
-        # Call the base implementation first to get the context
+        # Retrieves initial data
         context = super().get_context_data(**kwargs)
-        shelter = Shelter.objects.get(manager= self.request.user)
-        context['titleTab'] = f'Your {shelter.name}'
-        context['object'] = shelter
+        # adds new data
+        petName = context['object'].name.title()
+        context['titleTab'] = f'{petName} pet'
+        context['petSlug'] = context['object']
+        context['object'] = Shelter.objects.get(manager= self.request.user)
+        context['buttonName'] = f'Update {petName}'
+        context['titleFormShelter'] = self.object.name.title
+        context['petImages'] = Images.objects.filter(pet=self.object)
         return context
 
+class DeletePetProfileView(LoginRequiredMixin, DeleteView):
+    template_name = "forms/pet_confirm_delete.html"
+    form_class = PetForm
+    model = Pet
+
+    def get_context_data(self, **kwargs):
+        # Retrieves initial data
+        context = super().get_context_data(**kwargs)
+        context['titleTab'] = f'Delete {self.object.name.title()}'
+        context['titleH1'] = f'Delete {self.object.name.title()}'
+        context['petImg'] = Images.objects.get(pet=self.object, mainPic=True)
+        context['object'] = Shelter.objects.get(manager= self.request.user)
+        
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('pets', kwargs={'shelter': str(Shelter.objects.get(manager= self.request.user).slug)})
+
+class CreateImageView(LoginRequiredMixin, CreateView):
+    #permision_required = ""
+    template_name = "profile/createImagen.html"
+    form_class = ImageForm
+    model = Images
+
+    def get_context_data(self, **kwargs):
+        # Retrieves initial data
+        context = super().get_context_data(**kwargs)
+        # adds new data
+        context['titleTab'] = 'New imagen'
+        context['object'] = Shelter.objects.get(manager= self.request.user)
+        context['buttonName'] = 'New imagen'
+        context['titleH1'] = Pet.objects.get(slug=self.kwargs['pet']).name
+        return context
+    
+    def form_valid(self, form):
+        if form.is_valid():
+            form.instance.pet=Pet.objects.get(slug=self.kwargs['pet'])
+        return super().form_valid(form)
+
+class UpdateImageView(LoginRequiredMixin, UpdateView):
+    template_name = "profile/updateImagen.html"
+    context_object_name = 'petImg'
+    form_class = ImageForm
+    model = Images
+
+    def get_context_data(self, **kwargs):
+        # Retrieves initial data
+        context = super().get_context_data(**kwargs)
+        # adds new data
+        context['titleTab'] = 'Update imagen'
+        context['object'] = Shelter.objects.get(manager= self.request.user)
+        context['buttonName'] = 'Update imagen'
+        context['titleH1'] = Images.objects.get(pk=self.kwargs['pk']).pet.name
+        return context
+
+class DeleteImageView(LoginRequiredMixin, DeleteView):
+    template_name = "forms/image_confirm_delete.html"
+    context_object_name = 'petImg'
+    form_class = ImageForm
+    model = Images
+
+    def get_context_data(self, **kwargs):
+        # Retrieves initial data
+        context = super().get_context_data(**kwargs)
+        context['titleTab'] = 'Update imagen'
+        context['object'] = Shelter.objects.get(manager= self.request.user)
+        context['buttonName'] = 'Update imagen'
+        context['titleH1'] = Images.objects.get(pk=self.kwargs['pk']).pet.name
+        return context
+
+    def get_success_url(self):
+        return reverse('pet-profile-update', kwargs={'shelter': str(Shelter.objects.get(manager= self.request.user).slug), 'pet':str(Images.objects.get(pk=self.kwargs['pk']).pet.slug)})
 
 class LazyReload(ListView):
 
@@ -354,65 +398,3 @@ class LazyReload(ListView):
             }
             pets.append(pet)
         return pets
-
-# from .forms import petImageFormset
-# class DetailPetProfileView(LoginRequiredMixin, UpdateView):
-#     template_name = "profile/profile_pet.html"
-#     form_class = PetForm
-#     model = Pet
-
-#     def get_context_data(self, **kwargs):
-#         # Retrieves initial data
-#         context = super().get_context_data(**kwargs)
-#         # adds new data
-#         petName = context['object'].name.title()
-#         context['titleTab'] = f'{petName} pet'
-#         context['object'] = Shelter.objects.get(manager= self.request.user)
-#         context['buttonName'] = f'Update {petName}'
-#         context['formsetPic'] = petImageFormset()
-            
-#         return context
-
-#     def get_object(self, queryset=None):
-#         #https://stackoverflow.com/questions/57614381/generic-detail-view-postdetailview-must-be-called-with-either-an-object-pk-or-a
-#         # Since I'm using 2 variables in the url, django
-#         # doesn't know how to use the second one.
-#         if queryset is None:
-#             queryset = self.get_queryset()
-#         new_str = self.kwargs.get('pet') or self.request.GET.get('pet') or None
-
-#         queryset = queryset.filter(slug=new_str)
-#         obj = queryset.get()
-#         return obj
-
-#     def form_valid(self, form):
-#         self.get_context_data()
-#         petOrder = []
-#         petImgs = Images.objects.filter(pet= self.object)
-        
-#         for pi in petImgs:
-#             petOrder.append(pi)
-#         pos = 0
-#         for x, i in self.request.FILES.items():
-#             try:
-#                 Images.objects.filter(pk= petOrder[pos].pk).update(image=i)
-#             except Exception as ex:
-#                 img = Images(pet=self.object, image = i)
-#                 img.save()
-#         return super().form_valid(form)
-
-        # data = {
-        #         'form-TOTAL_FORMS':'2',
-        #         'form-INITIAL_FORMS':'2',
-        #         'form-MAX_NUM_FORMS': '2',
-        #         'form-0-mainPic': d[0].mainPic,
-        #         'form-0-image': d[0].image,
-        #         'form-0-DELETE': 'on',
-        #         'form-1-mainPic': d[1].mainPic,
-        #         'form-1-image': d[1].image,
-        #         'form-1-DELETE': 'on',
-        #         'form-2-mainPic': d[2].mainPic,
-        #         'form-2-image': d[2].image.url,
-        #         'form-2-DELETE': 'on',
-
-        #     }

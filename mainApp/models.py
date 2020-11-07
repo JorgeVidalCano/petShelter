@@ -63,7 +63,7 @@ class Pet(models.Model):
         ("#800000", "Brown"),
         ("#808080", "Gray"),
     )
-    id = models.AutoField(primary_key=True) # this is need to use the pk in the save method
+    id = models.AutoField(primary_key=True) # this is needed to use the pk in the save method
     name = models.CharField(max_length=60)
     about = models.CharField(max_length=300)
     age = models.PositiveIntegerField(default=0)
@@ -123,12 +123,14 @@ class Pet(models.Model):
     def getShelter(self):
         return self.shelter.name
 
+    # def getShelterSlug(self):
+    #     return self.shelter.slug
+
     def getAllFeatures(self):
         return Feature.objects.filter(pet=self)
 
-
 class Images(models.Model):
-    
+    #id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=60, default="", blank=True)
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name="pet_imagenes")
     image = models.ImageField(upload_to="pet_imagen")
@@ -137,6 +139,8 @@ class Images(models.Model):
     def save(self, *args, **kwargs):
         if self.name == "":
             self.name = get_random_string(length=7)
+        if self.mainPic:
+            Images.objects.filter(pet=self.pet, mainPic=True).update(mainPic=False)
         super(Images, self).save(*args, **kwargs)
         img = Image.open(self.image.path)
 
@@ -162,14 +166,20 @@ class Images(models.Model):
     def __str__(self):
         return self.name
 
-    def allPics(self):
-        return self.objects.all()
+    # def allPics(self):
+        # return self.objects.all()
     
-    def firstPic(self):
-        return self.objects.first()
+    # def firstPic(self):
+        # return self.objects.first()
     
     def petName(self):
         return self.pet.name
+    
+    def petSlug(self):
+        return self.pet.slug
+    
+    def get_absolute_url(self):
+        return reverse('pet-profile-update', kwargs={'shelter': str(self.pet.shelter.slug), 'pet':self.pet.slug})
 
 class Feature(models.Model):
     # To add things such Vacunated, sick, microchip etc.

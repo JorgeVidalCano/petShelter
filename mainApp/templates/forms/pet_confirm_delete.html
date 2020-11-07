@@ -1,0 +1,21 @@
+{% extends "profile/baseProfile.html" %}
+
+{% block profile %}
+<main role="main" class="col-12">   
+    <h1 class="display-3 my-2">{{titleH1}}</h1>
+    <div class="container">
+        {{ pet.image }}
+        <img id="pet-image-card" class="img-fluid rounded mb-3 mb-md-0 box-shadow" src="{{ petImg.image.url }}" alt="{{ petImg.name }}">
+    </div>
+    <form method="POST">
+        <p class="text-h4 my-2"> Are you sure you want to delete this pet?.</p2>
+        {% csrf_token %}
+        <div class="media mb-4">
+            <div class="media-body">
+                <button class="btn btn-outline-danger" type="submit">Delete</button>
+            </div>
+        </div>
+    </form>
+</main>
+        
+{% endblock profile %}

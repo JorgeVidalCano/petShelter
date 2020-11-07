@@ -79,14 +79,12 @@ class PetForm(forms.ModelForm):
 class ImageForm(forms.ModelForm):
     class Meta:
         model = Images
-        fields = ["id", "mainPic", "image"]
+        fields = ["mainPic", "image"]
         
         widgets={
             'mainPic': forms.CheckboxInput(attrs={'class': 'form-check-label'}),
-            'image': forms.FileInput(attrs={'class':'form-control-file', 
-                                            'upload_to': 'pet_imagen'}),
-            'id': forms.HiddenInput()
+            'image': forms.FileInput(attrs={'class':'form-control-file'}),
         },
         labels={"mainPic": "Main image", "image": ""}
 
-petImageFormset = formset_factory(ImageForm, can_delete=True,extra=3, max_num=3)
+petImageFormset = formset_factory(ImageForm, can_delete=True,extra=3, max_num=3, validate_min=False)

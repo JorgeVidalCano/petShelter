@@ -68,6 +68,24 @@ footer{
     height: 450px;
 }
 
+.isMainPic{
+    border-style: solid;
+    border-color: #047adb !important;
+    border-width: 0.5em;
+    border-radius: 25%;
+}
+/* .isMainPicText{
+    position: absolute;
+    top: 5%;
+    left: 40%;
+    background-color: #2125297a;
+    text-decoration: none;
+    color: whitesmoke;
+    size: 1em;
+    padding: auto;
+    margin: auto;   
+} */
+
 @media only screen and (max-width: 740px) {
     .img-carousel-shelter{
         max-width: 100%; 

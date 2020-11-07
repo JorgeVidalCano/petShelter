@@ -6,7 +6,9 @@ from .views import ( HomeView, LazyReload,
     DetailPetView, 
     ShelterView, DetailShelterView, CreateShelterView,
     BaseProfileView, UpdateShelterView,
-    ListPetsView, DetailPetProfileView, ProfileOptionsShelter, DeleteShelterView
+    ListPetsView, ProfileOptionsShelter, DeleteShelterView,
+    CreatePetProfileView, UpdatePetProfileView, DeletePetProfileView,
+    CreateImageView, UpdateImageView, DeleteImageView
 )
 urlpatterns = [
     path('', HomeView.as_view(), name="home"),
@@ -24,7 +26,13 @@ urlpatterns = [
     path('profile/options/<slug:slug>/', ProfileOptionsShelter.as_view(), name="profile-options"),
     
     path('manager/pets/<slug:shelter>/', ListPetsView.as_view(), name="pets"),
-    path('manager/pets/<slug:shelter>/<slug:pet>/', DetailPetProfileView.as_view(), name="pet-profile-detail"),
+    path('manager/pets/<slug:shelter>/create/', CreatePetProfileView.as_view(), name="pet-profile-create"),
+    path('manager/pets/<slug:shelter>/<slug:pet>/', UpdatePetProfileView.as_view(), name="pet-profile-update"),
+    path('manager/pets/<int:pk>/delete', DeletePetProfileView.as_view(), name="pet-profile-delete"),
+
+    path('imagen/<slug:pet>/create/', CreateImageView.as_view(), name="pet-image-new"),
+    path('imagen/<int:pk>/update/', UpdateImageView.as_view(), name="pet-image-update"),
+    path('imagen/<int:pk>/delete/', DeleteImageView.as_view(), name="pet-image-delete")
 ]
 
 if settings.DEBUG:
