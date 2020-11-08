@@ -23,11 +23,11 @@ $(document).ready(function () {
                 
                 var instance = JSON.parse(data["instance"]);
                 end = JSON.parse(data["end"]);
-                
                 for ( var i = 0; i < instance.length; i++){
-                var results = $(`
+                  console.log(instance[i].slug )
+                  var results = $(`
                     <div id="pet-card" class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                    <a href="${ instance[i].slug}" >
+                    <a href="/${ instance[i].slug }" >
                     <div class="card mb-4" id="box-shadow">
                       <img id="pet-image-card" class="card-img-top" alt="${ instance[i].name }" src="${ instance[i].images}">
                       <div class="card-img-overlay">

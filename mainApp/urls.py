@@ -6,10 +6,11 @@ from .views import ( HomeView, LazyReload,
     DetailPetView, 
     ShelterView, DetailShelterView, CreateShelterView,
     BaseProfileView, UpdateShelterView,
-    ListPetsView, ProfileOptionsShelter, DeleteShelterView,
+    ListPetsView, DeleteShelterView,
     CreatePetProfileView, UpdatePetProfileView, DeletePetProfileView,
     CreateImageView, UpdateImageView, DeleteImageView
 )
+
 urlpatterns = [
     path('', HomeView.as_view(), name="home"),
     path('lazyReload/<int:page>', LazyReload.as_view(), name="lazy-reload"),
@@ -23,7 +24,7 @@ urlpatterns = [
     path('profile/', BaseProfileView.as_view(), name="profile"),
     path('profile/<slug:slug>/', UpdateShelterView.as_view(), name="profile-shelter"),
     path('profile/<slug:slug>/delete/', DeleteShelterView.as_view(), name="delete-profile"),
-    path('profile/options/<slug:slug>/', ProfileOptionsShelter.as_view(), name="profile-options"),
+    # path('profile/options/<slug:slug>/', ProfileOptionsShelter.as_view(), name="profile-options"),
     
     path('manager/pets/<slug:shelter>/', ListPetsView.as_view(), name="pets"),
     path('manager/pets/<slug:shelter>/create/', CreatePetProfileView.as_view(), name="pet-profile-create"),

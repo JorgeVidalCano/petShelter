@@ -139,3 +139,8 @@ STATIC_URL = '/static/'
 #STATIC_ROOT = 'static/' #TODO run python manage.py collectstatic
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# Selects the redirection after login
+LOGIN_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "home"
+LOGIN_URL = 'login'

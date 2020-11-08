@@ -86,6 +86,10 @@ footer{
     margin: auto;   
 } */
 
+.error403{
+    color: #FF7588;
+  }
+
 @media only screen and (max-width: 740px) {
     .img-carousel-shelter{
         max-width: 100%; 

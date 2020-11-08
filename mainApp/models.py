@@ -59,7 +59,7 @@ class Pet(models.Model):
     )
     COLOR = (
         ("#fbfbfa", "White"),
-        ("000", "Black"),
+        ("#000", "Black"),
         ("#800000", "Brown"),
         ("#808080", "Gray"),
     )

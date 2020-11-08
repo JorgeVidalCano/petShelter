@@ -3,7 +3,7 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
-from users.forms import UserUpdateForm
+# from users.forms import UserUpdateForm
 from django.db import IntegrityError
 from django.contrib import messages
 from django.shortcuts import render
@@ -120,10 +120,15 @@ class BaseProfileView (LoginRequiredMixin, TemplateView):
         return context
 
 class CreateShelterView(LoginRequiredMixin, CreateView):
-    #permision_required = ""
     template_name = "forms/shelter.html"
     form_class = ShelterForm
     model = Shelter
+    
+    def get(self, request, *args, **kwargs):
+        shelter = Shelter.objects.filter(manager=self.request.user)
+        if shelter.count() > 0:
+            return HttpResponseRedirect(reverse('profile-shelter', kwargs={'slug':Shelter.objects.get(manager=self.request.user).slug}))
+        return super().get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         # Retrieves initial data
@@ -151,8 +156,14 @@ class CreateShelterView(LoginRequiredMixin, CreateView):
             messages.add_message(request, messages.ERROR, f'Sorry {self.request.user} but only one shelter is allowed per account.')
             return render(request, template_name=self.template_name, context=self.get_context_data())
     
-class UpdateShelterView(LoginRequiredMixin, UpdateView):
-    #permision_required = ""
+    def test_func(self):
+        # Check that the user is the manager
+        shelter = self.get_object()
+        if self.request.user == shelter.manager:
+            return True
+        return False
+
+class UpdateShelterView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = "profile/profile_shelter.html"
     form_class = ShelterForm
     model = Shelter
@@ -163,8 +174,15 @@ class UpdateShelterView(LoginRequiredMixin, UpdateView):
         context['titleTab'] = context['object'].name
         context['titleFormShelter'] = context['object'].name
         return context
-        
-class DeleteShelterView(LoginRequiredMixin, DeleteView):
+
+    def test_func(self):
+        # Checks that the user is the manager
+        shelter = self.get_object()
+        if self.request.user == shelter.manager:
+            return True
+        return False
+
+class DeleteShelterView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     template_name = "forms/shelter_confirm_delete.html"
     model = Shelter
     success_url = "/"
@@ -176,26 +194,26 @@ class DeleteShelterView(LoginRequiredMixin, DeleteView):
         return context
 
     def test_func(self):
-        # Overriden func. Checks that the user is the author
+        # Checks that the user is the manager
         shelter = self.get_object()
         if self.request.user == shelter.manager:
             return True
         return False
 
-class ProfileOptionsShelter(LoginRequiredMixin, UpdateView):
-    template_name = "profile/profileOptions.html"
-    form_class = UserUpdateForm
-    model = User
+# class ProfileOptionsShelter(LoginRequiredMixin, UpdateView):
+#     template_name = "profile/profileOptions.html"
+#     form_class = UserUpdateForm
+#     model = User
     
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get the context
-        context = super().get_context_data(**kwargs)
-        context['titleTab'] = 'Options'
-        #context['object'] = Shelter.objects.get(manager= self.request.user)
+#     def get_context_data(self, **kwargs):
+#         # Call the base implementation first to get the context
+#         context = super().get_context_data(**kwargs)
+#         context['titleTab'] = 'Options'
+#         #context['object'] = Shelter.objects.get(manager= self.request.user)
         
-        return context
+#         return context
 
-class ListPetsView(LoginRequiredMixin, ListView):
+class ListPetsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     template_name = "profile/listPets.html"
     ordering = ['date_created']
     form_model = PetForm
@@ -214,8 +232,15 @@ class ListPetsView(LoginRequiredMixin, ListView):
         context['object'] = Shelter.objects.get(manager= self.request.user)
         context['pets'] = context['object'].getAllPets()
         return context
+    
+    def test_func(self):
+        # Checks that the user is the manager
+        manager = Shelter.objects.get(slug=self.kwargs['shelter']).manager
+        if self.request.user == manager:
+            return True
+        return False
 
-class CreatePetProfileView(LoginRequiredMixin, CreateView):
+class CreatePetProfileView(LoginRequiredMixin, UserPassesTestMixin,CreateView):
     template_name = "profile/create_pet.html"
     form_class = PetForm
     model = Pet
@@ -225,6 +250,7 @@ class CreatePetProfileView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         # adds new data
         context['titleTab'] = "New pet"
+        context['titleFormShelter'] = "New pet"
         context['object'] = Shelter.objects.get(manager= self.request.user)
         # context['buttonName'] = 'Update {petName}'
         
@@ -238,8 +264,15 @@ class CreatePetProfileView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse('pet-image-new', kwargs={'pet': str(self.object.slug)})
+    
+    def test_func(self):
+        # Checks that the user is the manager
+        manager = Shelter.objects.get(slug=self.kwargs['shelter']).manager
+        if self.request.user == manager:
+            return True
+        return False
 
-class UpdatePetProfileView(LoginRequiredMixin, UpdateView):
+class UpdatePetProfileView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = "profile/profile_pet.html"
     form_class = PetForm
     model = Pet
@@ -269,7 +302,17 @@ class UpdatePetProfileView(LoginRequiredMixin, UpdateView):
         context['petImages'] = Images.objects.filter(pet=self.object)
         return context
 
-class DeletePetProfileView(LoginRequiredMixin, DeleteView):
+    def get_success_url(self):
+        return reverse('pet-profile-update', kwargs={'shelter': str(Shelter.objects.get(manager= self.request.user).slug), 'pet':str(self.object.slug)})
+    
+    def test_func(self):
+        # Check that the user is the manager
+        pet = self.get_object()
+        if self.request.user == pet.shelter.manager:
+            return True
+        return False
+
+class DeletePetProfileView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     template_name = "forms/pet_confirm_delete.html"
     form_class = PetForm
     model = Pet
@@ -286,8 +329,15 @@ class DeletePetProfileView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('pets', kwargs={'shelter': str(Shelter.objects.get(manager= self.request.user).slug)})
+    
+    def test_func(self):
+        # Check that the user is the manager
+        pet = self.get_object()
+        if self.request.user == pet.shelter.manager:
+            return True
+        return False
 
-class CreateImageView(LoginRequiredMixin, CreateView):
+class CreateImageView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     #permision_required = ""
     template_name = "profile/createImagen.html"
     form_class = ImageForm
@@ -307,8 +357,15 @@ class CreateImageView(LoginRequiredMixin, CreateView):
         if form.is_valid():
             form.instance.pet=Pet.objects.get(slug=self.kwargs['pet'])
         return super().form_valid(form)
+    
+    def test_func(self):
+        # Checks that the user is the manager
+        manager = Pet.objects.get(slug=self.kwargs['pet']).shelter
+        if self.request.user == manager.manager:
+            return True
+        return False
 
-class UpdateImageView(LoginRequiredMixin, UpdateView):
+class UpdateImageView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = "profile/updateImagen.html"
     context_object_name = 'petImg'
     form_class = ImageForm
@@ -324,7 +381,14 @@ class UpdateImageView(LoginRequiredMixin, UpdateView):
         context['titleH1'] = Images.objects.get(pk=self.kwargs['pk']).pet.name
         return context
 
-class DeleteImageView(LoginRequiredMixin, DeleteView):
+    def test_func(self):
+        # Checks that the user is the manager
+        pet = Images.objects.get(pk=self.kwargs['pk']).pet
+        if self.request.user == pet.shelter.manager:
+            return True
+        return False
+
+class DeleteImageView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     template_name = "forms/image_confirm_delete.html"
     context_object_name = 'petImg'
     form_class = ImageForm
@@ -341,6 +405,13 @@ class DeleteImageView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('pet-profile-update', kwargs={'shelter': str(Shelter.objects.get(manager= self.request.user).slug), 'pet':str(Images.objects.get(pk=self.kwargs['pk']).pet.slug)})
+    
+    def test_func(self):
+        # Checks that the user is the manager
+        pet = Images.objects.get(pk=self.kwargs['pk']).pet
+        if self.request.user == pet.shelter.manager:
+            return True
+        return False
 
 class LazyReload(ListView):
 

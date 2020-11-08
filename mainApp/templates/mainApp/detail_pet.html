@@ -14,7 +14,6 @@
       <h4 class="h4">About me</h4>
       <p>{{ object.about|capfirst }}</p>
       <h4 class="h4"> {{object.name.title}}'s details</h4>
-
       <p>I'm a {{ object.sex }}, {{ object.age }} years old and I weight {{ object.weight }}.</p>
       <div class="p-4 mb-2 rounded-pill border" style="background-color: {{ object.color }}"></div>
       <p>I'm looking for a new family since {{ object.date_created }}</p>
@@ -23,12 +22,18 @@
           <li class="badge badge-tag-pets p-2">{{f}}</li>
           {% endfor %}
       </ul>
+      {% if user.is_authenticated and user == object.shelter.manager %}
+      <div class="container">
+        <a class="btn btn-info btn-sm" href="{% url 'pet-profile-update' object.shelter.slug object.slug %}">Update {{ object.name|title }}</a>
+      </div>
+      {% endif %}
+
     </div>
   </div>
 </div>    
 <div class="container-fluid">
     {% include "mainApp/pet_card.html" with CategoryName="Similar Pets" PetList=related_pets %} 
-</div>  
+</div>
 
 {% endblock content %}
 {% load static %}
