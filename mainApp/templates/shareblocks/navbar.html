@@ -1,4 +1,4 @@
-<nav class="navbar fixed-top navbar-expand-md navbar-dark bg-secondary border-bottom border-dark" style="position: sticky;">
+<nav class="navbar fixed-top navbar-expand-md navbar-dark border-bottom border-dark" style="position: sticky;">
   
   <div class="container">
     <div class="navbar-header">
@@ -7,7 +7,7 @@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="navbars" aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbars">
+  <div class="collapse navbar-collapse font-weight-bolder" id="navbars">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
         <a class="nav-link" href="{% url 'home' %}">Home</a>
@@ -36,6 +36,16 @@
         {% if user.is_authenticated %}
         <li class="nav-item">
           <span class="nav-link">Hello {{user.username|title}}</span>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'login' %}">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'register' %}">Create account</a>
         </li>
         {% endif %}
 

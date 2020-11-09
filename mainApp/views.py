@@ -15,10 +15,10 @@ from django.views.generic import(
      DeleteView,
      TemplateView
     )
-from django.core.paginator import Paginator
 from .forms import ShelterForm, PetForm, ImageForm
-from django.http import JsonResponse
 from .models import Pet, Shelter, Feature, Images
+from django.core.paginator import Paginator
+from django.http import JsonResponse
 import copy
 import json
 

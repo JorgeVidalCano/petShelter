@@ -142,5 +142,5 @@ MEDIA_URL = '/media/'
 
 # Selects the redirection after login
 LOGIN_REDIRECT_URL = "home"
-LOGOUT_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "logout"
 LOGIN_URL = 'login'

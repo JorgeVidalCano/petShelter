@@ -88,7 +88,16 @@ footer{
 
 .error403{
     color: #FF7588;
-  }
+}
+nav, footer{
+    background-color: #047adbe7 !important;
+    color: #FF7588 !important;
+}
+
+.color-login{
+    background-color: #047adb3a !important;
+}
+
 
 @media only screen and (max-width: 740px) {
     .img-carousel-shelter{
