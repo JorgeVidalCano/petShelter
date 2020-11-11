@@ -110,6 +110,12 @@ class DetailShelterView(DetailView):
 class BaseProfileView (LoginRequiredMixin, TemplateView):
     template_name = "profile/profileSummarize.html"
     model = Shelter
+    
+    def get(self, request, *args, **kwargs):
+        shelter = Shelter.objects.filter(manager=self.request.user)
+        if shelter.count() == 0:
+            return HttpResponseRedirect(reverse('shelter-new'))
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get the context
@@ -135,7 +141,7 @@ class CreateShelterView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         # adds new data
         context['titleTab'] = 'Create New shelter'
-        context['titleFormShelter'] = "Adoption Shelter"
+        context['titleFormShelter'] = "Create New Adoption Shelter"
         context['paragraph'] = 'Fill the required info for your shelter'
         return context
     
@@ -147,7 +153,13 @@ class CreateShelterView(LoginRequiredMixin, CreateView):
         if bool(self.request.FILES):
             form.instance.image = self.request.FILES['image']
         return super().form_valid(form)
-
+    
+    def form_invalid(self, form):
+        for m, e in form.errors.as_data().items():
+            errorMessage = str(e[0]).replace("['", "").replace("']", "")
+        messages.error(self.request, errorMessage)
+        return super().form_invalid(form)
+    
     def post(self, request, *args, **kwargs):
         try:
             super().post(request, *args, **kwargs)
@@ -174,6 +186,12 @@ class UpdateShelterView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context['titleTab'] = context['object'].name
         context['titleFormShelter'] = context['object'].name
         return context
+
+    def form_invalid(self, form):
+        for m, e in form.errors.as_data().items():
+            errorMessage = str(e[0]).replace("['", "").replace("']", "")
+        messages.error(self.request, errorMessage)
+        return super().form_invalid(form) 
 
     def test_func(self):
         # Checks that the user is the manager
@@ -261,6 +279,12 @@ class CreatePetProfileView(LoginRequiredMixin, UserPassesTestMixin,CreateView):
         if form.is_valid():
             form.instance.shelter= Shelter.objects.get(manager=self.request.user)
         return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        for m, e in form.errors.as_data().items():
+            errorMessage = str(e[0]).replace("['", "").replace("']", "")
+        messages.error(self.request, errorMessage)
+        return super().form_invalid(form)
 
     def get_success_url(self):
         return reverse('pet-image-new', kwargs={'pet': str(self.object.slug)})
@@ -305,6 +329,13 @@ class UpdatePetProfileView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_success_url(self):
         return reverse('pet-profile-update', kwargs={'shelter': str(Shelter.objects.get(manager= self.request.user).slug), 'pet':str(self.object.slug)})
     
+    def form_invalid(self, form):
+        for m, e in form.errors.as_data().items():
+            errorMessage = str(e[0]).replace("['", "").replace("']", "")
+        messages.error(self.request, errorMessage)
+        return super().form_invalid(form)
+    
+
     def test_func(self):
         # Check that the user is the manager
         pet = self.get_object()
@@ -358,6 +389,12 @@ class CreateImageView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             form.instance.pet=Pet.objects.get(slug=self.kwargs['pet'])
         return super().form_valid(form)
     
+    def form_invalid(self, form):
+        for m, e in form.errors.as_data().items():
+            errorMessage = str(e[0]).replace("['", "").replace("']", "")
+        messages.error(self.request, errorMessage)
+        return super().form_invalid(form)
+    
     def test_func(self):
         # Checks that the user is the manager
         manager = Pet.objects.get(slug=self.kwargs['pet']).shelter
@@ -381,6 +418,12 @@ class UpdateImageView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context['titleH1'] = Images.objects.get(pk=self.kwargs['pk']).pet.name
         return context
 
+    def form_invalid(self, form):
+        for m, e in form.errors.as_data().items():
+            errorMessage = str(e[0]).replace("['", "").replace("']", "")
+        messages.error(self.request, errorMessage)
+        return super().form_invalid(form)
+    
     def test_func(self):
         # Checks that the user is the manager
         pet = Images.objects.get(pk=self.kwargs['pk']).pet

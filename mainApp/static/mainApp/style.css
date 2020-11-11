@@ -98,11 +98,17 @@ nav, footer{
     background-color: #047adb3a !important;
 }
 
+.special-width{
+    width: 50% !important;
+}
 
 @media only screen and (max-width: 740px) {
     .img-carousel-shelter{
         max-width: 100%; 
         height: 350px;
         padding-bottom: 1rem;
+    }
+    .special-width{
+        width: 100% !important;
     }
   }

@@ -11,27 +11,26 @@ class UserRegisterForm(UserCreationForm):
 
         widgets = {
             'username': forms.TextInput(attrs={'class':'form-control mb-4',
-                                            'placeholder': 'Write a username.',
-                                            'label':"Username"
-                                            }),
+                                            'placeholder': 'Write a username.'}),
             'first_name': forms.TextInput(attrs={'class':'form-control mb-4',
-                                            'placeholder': 'First name.',
-                                            'label':"First name"
-                                            }),
+                                            'placeholder': 'First name.'}),
             'last_name': forms.TextInput(attrs={'class':'form-control mb-4',
-                                            'placeholder': 'Last name.',
-                                            'label':"Last name"
-                                            }),                                                                                    
+                                            'placeholder': 'Last name.'}),                                                                                    
             'email': forms.EmailInput(attrs={'class':'form-control mb-4', 
-                                            'placeholder': 'Your e-mail.',
-                                            'label':"Email"}),
+                                            'placeholder': 'Your e-mail.',}),
             'password1': forms.PasswordInput(attrs={'class':'form-control mb-4',
-                                                    'placeholder':'Password',
-                                                    'label':"Password"}),
+                                                    'placeholder':'Password'}),
             'password2': forms.PasswordInput(attrs={'class':'form-control mb-4',
-                                                    'placeholder':'Repeat Password',
-                                                    'label':"Confirm Password"}),
+                                                    'placeholder':'Repeat Password'}),
             'is_active': forms.CheckboxInput(attrs={'class':'form-control',
-                                                    'label':''
-                                                    ,'checked': ""})
+                                                    'checked': ""})
+        }
+        labels = {
+            "Username":"Username",
+            "first_name":"First name",              
+            "last_name":"Last name",
+            "email":"Email",
+            "password1":"Password",
+            "password2":"Confirm Password",
+            "is_active": ""
         }
