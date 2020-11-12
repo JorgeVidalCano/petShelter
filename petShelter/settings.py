@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'mainApp',
     'carousel',
     'users',
+    'contactMessages',
 
 ]
 
@@ -58,6 +59,7 @@ TEMPLATES = [
             'mainApp/',
             'carousel/',
             'users/',
+            'contactMessages/'
             ],
         'APP_DIRS': True,
         'OPTIONS': {

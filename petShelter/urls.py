@@ -11,6 +11,7 @@ urlpatterns = [
     path('login/', MyLoginView.as_view(template_name='users/login.html', redirect_authenticated_user=True), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/login.html'), name='logout'),
     path('deleteAccount/<int:pk>', DeleteAccount.as_view(), name='delete-account'),
+    path('message/', include('contactMessages.urls')),
     path('', include('mainApp.urls')),
 ]
 

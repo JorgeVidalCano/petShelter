@@ -27,7 +27,14 @@
         <a class="btn btn-info btn-sm" href="{% url 'pet-profile-update' object.shelter.slug object.slug %}">Update {{ object.name|title }}</a>
       </div>
       {% endif %}
-
+      {% if user.is_authenticated %}
+      <form method="POST" class="form-control">
+        {% csrf_token %}
+        {{ comment }}
+        
+        <a class="btn btn-info btn-sm" href="{% url 'new_Message' %}">Send</a>
+      </form>
+      {% endif %}
     </div>
   </div>
 </div>    

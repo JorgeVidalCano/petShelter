@@ -1,4 +1,3 @@
-from django.forms.models import formset_factory
 from .models import Shelter, Images, Pet, Feature
 from django.forms import ModelForm
 from django import forms
@@ -87,4 +86,5 @@ class ImageForm(forms.ModelForm):
         },
         labels={"mainPic": "Main image", "image": ""}
 
-petImageFormset = formset_factory(ImageForm, can_delete=True,extra=3, max_num=3, validate_min=False)
+#from django.forms.models import formset_factory
+#petImageFormset = formset_factory(ImageForm, can_delete=True,extra=3, max_num=3, validate_min=False)

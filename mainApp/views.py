@@ -19,6 +19,7 @@ from .forms import ShelterForm, PetForm, ImageForm
 from .models import Pet, Shelter, Feature, Images
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from contactMessages.forms import CommentForm
 import copy
 import json
 
@@ -75,6 +76,8 @@ class DetailPetView(DetailView):
         if context['related_pets'].count() < 4:
             context['related_pets'] = Pet.objects.filter(kind= kwargs['object'].kind, status__in= ["Urgent","Adoption"],).exclude(**excludes).order_by("?")[:ROWPET]
 
+        form = CommentForm()
+        context.update({"comment":form})
 
         return context
 
