@@ -7,9 +7,14 @@
     {% include "mainApp/detail_pet_img.html" %} 
     </div>
     <div class="col-md-4">
+      {% if user.is_authenticated and user == object.shelter.manager %}
+      <div class="container">
+        <a class="btn btn-info btn-sm" href="{% url 'pet-profile-update' object.shelter.slug object.slug %}">Update {{ object.name|title }}</a>
+      </div>
+      {% endif %}
       <h4 class="h4">Shelter</h4>
       <p>I live in <b>
-        <a class="removeHoverLink badge badge-primary p-2" href="{% url 'shelter-detail' object.shelter.slug %}">{{ object.shelter.name|title }}</a>
+       
       </b></p>
       <h4 class="h4">About me</h4>
       <p>{{ object.about|capfirst }}</p>
@@ -22,18 +27,18 @@
           <li class="badge badge-tag-pets p-2">{{f}}</li>
           {% endfor %}
       </ul>
-      {% if user.is_authenticated and user == object.shelter.manager %}
-      <div class="container">
-        <a class="btn btn-info btn-sm" href="{% url 'pet-profile-update' object.shelter.slug object.slug %}">Update {{ object.name|title }}</a>
-      </div>
-      {% endif %}
       {% if user.is_authenticated %}
-      <form method="POST" class="form-control">
+      <form id="commentPet" method="POST" data-url="{{ request.site }}/message/{{object.slug}}/newMessage/">
         {% csrf_token %}
-        {{ comment }}
+        {% for c in comment %}
+          {{ c.label_tag|cut:":" }}
+          {{ c }}
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Send</button>
         
-        <a class="btn btn-info btn-sm" href="{% url 'new_Message' %}">Send</a>
       </form>
+      {% else %}
+      <p>Log in before get in touch</p>
       {% endif %}
     </div>
   </div>
@@ -45,5 +50,5 @@
 {% endblock content %}
 {% load static %}
 {% block js %} 
-    <script type="text/javascript" src="{% static 'mainApp/javascript/detail_pet_img.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mainApp/javascript/ajaxComments.js' %}"></script>
 {% endblock js %}

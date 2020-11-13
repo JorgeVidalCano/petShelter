@@ -1,25 +1,40 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from contactMessages.models import ChatRoom, Message
+from django.db import IntegrityError
 from django.http import HttpResponseRedirect 
 from django.shortcuts import render
 from django.views.generic import(
-    CreateView
+    CreateView,
+    FormView,
+    View
 )
+from mainApp.models import Pet
 from .forms import CommentForm
 from django.contrib import messages
+from django.http import JsonResponse
+
+from django.core import serializers
 
 class CreateMessage(LoginRequiredMixin, CreateView):
-    model = Message
+    
     form_class=CommentForm
+    model = Message
 
-    def form_valid(self, form):
-        # Adds the author to the post
-        form.instance.manager = self.request.user
+    def form_valid(self, form): 
+        pet = Pet.objects.get(slug=self.kwargs['pet'])       
+        try:
+            newChat = ChatRoom.objects.create(shelter= pet.shelter, sender= self.request.user, pet= pet)
+        except IntegrityError as ex:
+            newChat = ChatRoom.objects.get(shelter= pet.shelter, sender= self.request.user, pet= pet)
+            # this means the chat already exists
+            print("Chat already exists")
+
+        form.instance.sender = self.request.user
+        form.instance.receiver = pet.shelter.manager
+        form.instance.chatroom = newChat
+        form.save()
+        return JsonResponse({"instance": "Message sent."}, status=200)
         
-        # only access if some pic is uploaded
-        if bool(self.request.FILES):
-            form.instance.image = self.request.FILES['image']
-        return super().form_valid(form)
     
     def form_invalid(self, form):
         for m, e in form.errors.as_data().items():
@@ -28,7 +43,8 @@ class CreateMessage(LoginRequiredMixin, CreateView):
         return super().form_invalid(form)
     
     def post(self, request, *args, **kwargs):
-        super().post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
+
         # try:
             # super().post(request, *args, **kwargs)
             # return HttpResponseRedirect(self.get_success_url())

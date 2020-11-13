@@ -5,6 +5,6 @@ from django.urls import path
 from .views import CreateMessage
 
 urlpatterns = [
-    path('sendMessage', CreateMessage.as_view(), name="new_Message"),
+    path('<slug:pet>/newMessage/', CreateMessage.as_view(), name="new_Message"),
 ]
 

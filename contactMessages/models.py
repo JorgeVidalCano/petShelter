@@ -27,6 +27,9 @@ class Message(models.Model):
     def __str__(self):
         return self.message[:40]
 
+    def get_success_url(self):
+        return reverse('detail-pet', kwargs={'slug':self.pet})
+
     # def get_absolute_url(self):
     #     return reverse('profile-shelter', kwargs={'slug':self.slug})
     
