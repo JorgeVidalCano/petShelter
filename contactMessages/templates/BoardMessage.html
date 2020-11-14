@@ -1,0 +1,75 @@
+{% extends "shareblocks/base.html" %}
+{% block content %}
+<div class="container py-2 px-4">
+    <div class="row  overflow-hidden shadow">
+      <div class="col-4 px-0 bg-light border-right min-vh-100">
+        <div class="">
+          <div class="text-white px-4 py-2 bg-dark">
+            <p class="h5 mb-0 py-1">Conversations</p>
+          </div>
+          <!-- Left side conversations -->
+          {% for r in chatRooms %}
+          <div class="messages-box ">
+            <div class="list-group">
+              <a class="list-group-item list-group-item-action active text-white bg-info chatRoom" href="{% url 'show-messages' r.slug %}">
+                <div class="media">
+                  <div class="media-body ml-4">
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                      <div>
+                        <h6 class="mb-0">{{ r.shelter.name|upper }}</h6>
+                        <span class="mb-0">{{ r.pet.name|title }}</span>
+                      </div>
+                      <small class="small font-weight-bold">{{ r.date_created }}</small>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            <!-- Left side converstations -->
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <!-- Chat Box-->
+      <div class="col-8 px-0">
+        <div id="message" class="px-4 py-5 chat-box bg-white">
+          <!-- Sender Message-->
+          {% for m in message %}
+            {% if m.sender == request.user %}
+            <!-- Reciever Message-->
+            <div class="comment media w-50 ml-auto mb-3">
+              <div class="media-body">
+                <p class="small font-weight-bold">You</p>
+                <div class="bg-primary rounded py-2 px-3 mb-2">
+                  <p class="text-small mb-0 text-white">{{ m.message }}</p>
+                </div>
+                <p class="small text-muted">{{ m.date_created }}</p>
+              </div>
+            </div>
+            {% else %}
+            <div class="comment media w-50 mb-3">
+              <div class="media-body ml-3">
+                <p class="small text-muted font-weight-bold">{{ m.sender.username|title }}</p>
+                <div class="bg-light rounded py-2 px-3 mb-2">
+                  <p class="text-small mb-0 text-muted">{{ m.message }}</p>
+                </div>
+                <p class="small text-muted">{{ m.date_created }}</p>
+              </div>
+            </div>
+            {% endif %}
+          {% endfor %}  
+        <!-- Typing area -->
+        
+        <form id="answerForm" method="POST" data-url="" class="bg-light">
+          {% csrf_token %}
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+{% load static %}
+{% block js %} 
+    <script type="text/javascript" src="{% static 'mainApp/javascript/ajaxComments.js' %}"></script>
+{% endblock js %}

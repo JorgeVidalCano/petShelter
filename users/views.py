@@ -68,7 +68,7 @@ class RegisterAccount(FormView):
 
     def form_valid(self, form):
         form.instance.is_staff = form.cleaned_data.get('is_active')
-
+        form.instance.is_active = True
         username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password1')
 
