@@ -54,13 +54,6 @@
     background-color: #03a9f4;
 }
 
-footer{
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    text-align: center;
-}
-
 /* Carousel for pet detail */
 .img-carousel-shelter{
     width: auto; 
@@ -74,17 +67,7 @@ footer{
     border-width: 0.5em;
     border-radius: 25%;
 }
-/* .isMainPicText{
-    position: absolute;
-    top: 5%;
-    left: 40%;
-    background-color: #2125297a;
-    text-decoration: none;
-    color: whitesmoke;
-    size: 1em;
-    padding: auto;
-    margin: auto;   
-} */
+
 
 .error403{
     color: #FF7588;
@@ -99,9 +82,34 @@ nav, footer{
 }
 
 .special-width{
+    /*In forms*/
     width: 50% !important;
 }
 
+.scroll-bar-message{
+    height: 50%;
+    overflow-y: scroll;
+}
+footer{
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.board-Message-left{
+    background-color: #76a5d4;
+}
+.chatRoom{
+    background-color: #0d447bc4;
+}
+.chatRoom:hover{
+    background-color: #0d447b;
+}
+
+.activeChatRoom{
+    background-color: #355070 !important;
+}
 @media only screen and (max-width: 740px) {
     .img-carousel-shelter{
         max-width: 100%; 

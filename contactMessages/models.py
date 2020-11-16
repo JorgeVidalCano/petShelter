@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from mainApp.models import Pet, Shelter
 from django.utils import timezone
 from django.urls import reverse
+from django.db.models import Q
 from django.db import models
 
 class ChatRoom(models.Model):
@@ -11,7 +12,7 @@ class ChatRoom(models.Model):
     sender = models.ForeignKey(User, related_name="sender_chatroom", on_delete=models.DO_NOTHING)
     pet = models.ForeignKey(Pet, on_delete=models.DO_NOTHING, related_name="pet_chatroom")
     slug = models.SlugField(unique=True, blank="True")
-    date_created = models.DateField(default=timezone.now)
+    date_created = models.DateTimeField(default=timezone.now)
     
     class Meta:
         unique_together = ["shelter", "sender", "pet"]
@@ -25,15 +26,29 @@ class ChatRoom(models.Model):
        super(ChatRoom, self).save(*args, **kwargs)
 
 class Message(models.Model):
+    # sender is the user whereas the receiver is the shelters, names were wrongly chosen.
     sender = models.ForeignKey(User, related_name="sender_comment", on_delete=models.DO_NOTHING)
-    receiver = models.ForeignKey(User, related_name="manager_comment", on_delete=models.DO_NOTHING)
+    #receiver = models.ForeignKey(User, related_name="manager_comment", on_delete=models.DO_NOTHING)
     chatroom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name="chatroom_Message")
-    message = models.CharField(max_length=255)
+    message = models.CharField(max_length=255, blank=False)
     read = models.BooleanField(default=False)
-    date_created = models.DateField(default=timezone.now)
+    date_created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.message[:40]
+
+    # def markAsRead(self, **kwargs):
+    #     if reader.is_staff:
+    #         if self.receiver == reader:
+    #             self.update(read=True)
+    #     else:
+    #         if self.sender == reader:
+    #             self.update(read=True)
+    #     return
+
+    def countUnreadMessages(self, reader):
+        return self.objects.get(Q(sender=reader) | Q(receiver=reader), read=False)
+        
 
     def get_success_url(self):
         return reverse('detail-pet', kwargs={'slug':self.pet})

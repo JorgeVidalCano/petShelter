@@ -1,8 +1,8 @@
 {% extends "shareblocks/base.html" %}
 {% block content %}
 <div class="container py-2 px-4">
-    <div class="row  overflow-hidden shadow">
-      <div class="col-4 px-0 bg-light border-right min-vh-100">
+    <div class="row overflow-hidden shadow min-vh-100 min-vh-250">
+      <div class="col-4 px-0 border-right board-Message-left">
         <div class="">
           <div class="text-white px-4 py-2 bg-dark">
             <p class="h5 mb-0 py-1">Conversations</p>
@@ -11,12 +11,16 @@
           {% for r in chatRooms %}
           <div class="messages-box ">
             <div class="list-group">
-              <a class="list-group-item list-group-item-action active text-white bg-info chatRoom" href="{% url 'show-messages' r.slug %}">
+              <a class="list-group-item list-group-item-action text-white chatRoom" href="{% url 'show-messages' r.slug %}">
                 <div class="media">
                   <div class="media-body ml-4">
                     <div class="d-flex align-items-center justify-content-between mb-1">
                       <div>
-                        <h6 class="mb-0">{{ r.shelter.name|upper }}</h6>
+                        {% if user.is_staff %}
+                        <h6 class="mb-0">{{ r.sender.username|title }}</h6>
+                        {% else %}
+                        <h6 class="mb-0">{{ r.shelter.name|title }}</h6>
+                        {% endif %}
                         <span class="mb-0">{{ r.pet.name|title }}</span>
                       </div>
                       <small class="small font-weight-bold">{{ r.date_created }}</small>
@@ -31,9 +35,10 @@
         </div>
       </div>
       <!-- Chat Box-->
-      <div class="col-8 px-0">
-        <div id="message" class="px-4 py-5 chat-box bg-white">
+      <div class="col-8 px-0 min-vh-0 max-vh-250">
+        <div id="message" class="px-4 py-5 chat-box bg-white scroll-bar-message">
           <!-- Sender Message-->
+          
           {% for m in message %}
             {% if m.sender == request.user %}
             <!-- Reciever Message-->
@@ -59,12 +64,10 @@
             {% endif %}
           {% endfor %}  
         <!-- Typing area -->
-        
+      </div>
         <form id="answerForm" method="POST" data-url="" class="bg-light">
           {% csrf_token %}
-
         </form>
-      </div>
     </div>
   </div>
 

@@ -36,13 +36,13 @@
   {% endif %}
   {% if not user.is_staff %}
   <div class="container special-width py-4">
+    {% if user.is_authenticated %}
     <form id="commentPet" method="POST" data-url="{{ request.site }}/message/{{object.slug}}/newMessage/">
       {% csrf_token %}
       {% for c in comment %}
         {{ c.label_tag|cut:":" }}
         {{ c }}
       {% endfor %}
-      {% if user.is_authenticated %}
         <button type="submit" class="btn btn-primary">Send</button>
       {% else %}
         <a class="nav-link" href="{% url 'login' %}">Login before sending a message</a>
