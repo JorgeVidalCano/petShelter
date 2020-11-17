@@ -26,7 +26,6 @@ class ChatRoom(models.Model):
        super(ChatRoom, self).save(*args, **kwargs)
 
 class Message(models.Model):
-    # sender is the user whereas the receiver is the shelters, names were wrongly chosen.
     sender = models.ForeignKey(User, related_name="sender_comment", on_delete=models.DO_NOTHING)
     #receiver = models.ForeignKey(User, related_name="manager_comment", on_delete=models.DO_NOTHING)
     chatroom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name="chatroom_Message")
@@ -45,10 +44,24 @@ class Message(models.Model):
     #         if self.sender == reader:
     #             self.update(read=True)
     #     return
-
-    def countUnreadMessages(self, reader):
-        return self.objects.get(Q(sender=reader) | Q(receiver=reader), read=False)
+    # @property
+    # def countUnreadMessages(self, reader):
+    #     return Message.objects.filter(sender=reader, read=False)
         
 
     def get_success_url(self):
         return reverse('detail-pet', kwargs={'slug':self.pet})
+
+
+def countUnreadMessages(self):
+    chat = ChatRoom.objects.get(shelter=Shelter.objects.get(manager=self))
+    print(chat)
+    if chat:
+        filters={'chatroom':chat}
+    else:
+        print(chat)
+        chat = ChatRoom.objects.get(sender=self)
+    return Message.objects.filter(chatroom=chat).exclude(sender=self).count()
+    #return Message.objects.filter(sender=self, read=False).count()
+
+User.add_to_class("countUnreadMessages", countUnreadMessages)

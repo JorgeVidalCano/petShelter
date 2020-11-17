@@ -14,8 +14,6 @@ from django.views.generic import(
 from mainApp.models import Pet, Shelter
 from .forms import CommentForm
 
-
-
 class BoardMessage(LoginRequiredMixin, ListView):
     template_name = "BoardMessage.html"
     form_model = CommentForm
