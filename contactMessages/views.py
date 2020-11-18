@@ -13,6 +13,7 @@ from django.views.generic import(
 )
 from mainApp.models import Pet, Shelter
 from .forms import CommentForm
+from django.db.models import Count
 
 class BoardMessage(LoginRequiredMixin, ListView):
     template_name = "BoardMessage.html"
@@ -27,17 +28,15 @@ class BoardMessage(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         # adds new data
         context['titleTab'] = 'Messages'
-        context['titlePage'] = 'Check your messages'
+        #context['titlePage'] = 'Check your messages'
         
         if self.request.user.is_staff:
             filters = {'shelter': Shelter.objects.get(manager=self.request.user)}
         else:
             filters = {'sender':self.request.user}
-        #filters = {'sender':self.request.user}
         context.update({
             'chatRooms': ChatRoom.objects.filter(**filters).order_by('-date_created')
                         })
-        
         return context
 
 class AnswerMessageAjax(LoginRequiredMixin, CreateView):
@@ -55,7 +54,7 @@ class AnswerMessageAjax(LoginRequiredMixin, CreateView):
             'messages':message_serialized, 
             'user_id': self.request.user.id, 
             'user_sender': message[0].chatroom.sender.username.title(),
-            #'user_receiver': message[0].chatroom.shelter.manager.username.title(), 
+            
             'newMessageUrl': newMessageUrl}, status=200)
 
     def form_valid(self, form): 

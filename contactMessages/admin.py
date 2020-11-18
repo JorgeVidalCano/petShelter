@@ -7,6 +7,6 @@ class ChatRoomAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ['sender', 'chatroom','message','read', 'date_created']
+    list_display = ['sender', 'chatroom','message', 'date_created']
 
     

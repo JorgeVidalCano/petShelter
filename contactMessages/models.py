@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.urls import reverse
 from django.db.models import Q
 from django.db import models
+from django.db.models import Count
 
 class ChatRoom(models.Model):
     shelter = models.ForeignKey(Shelter, related_name="shelter_chatroom", on_delete=models.DO_NOTHING)
@@ -25,43 +26,17 @@ class ChatRoom(models.Model):
        self.slug = get_random_string(length=7)
        super(ChatRoom, self).save(*args, **kwargs)
 
+    def lastMessage(self):
+        return Message.objects.filter(chatroom=self).order_by("-date_created")[0]
+
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name="sender_comment", on_delete=models.DO_NOTHING)
-    #receiver = models.ForeignKey(User, related_name="manager_comment", on_delete=models.DO_NOTHING)
     chatroom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name="chatroom_Message")
     message = models.CharField(max_length=255, blank=False)
-    read = models.BooleanField(default=False)
     date_created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.message[:40]
 
-    # def markAsRead(self, **kwargs):
-    #     if reader.is_staff:
-    #         if self.receiver == reader:
-    #             self.update(read=True)
-    #     else:
-    #         if self.sender == reader:
-    #             self.update(read=True)
-    #     return
-    # @property
-    # def countUnreadMessages(self, reader):
-    #     return Message.objects.filter(sender=reader, read=False)
-        
-
     def get_success_url(self):
-        return reverse('detail-pet', kwargs={'slug':self.pet})
-
-
-def countUnreadMessages(self):
-    chat = ChatRoom.objects.get(shelter=Shelter.objects.get(manager=self))
-    print(chat)
-    if chat:
-        filters={'chatroom':chat}
-    else:
-        print(chat)
-        chat = ChatRoom.objects.get(sender=self)
-    return Message.objects.filter(chatroom=chat).exclude(sender=self).count()
-    #return Message.objects.filter(sender=self, read=False).count()
-
-User.add_to_class("countUnreadMessages", countUnreadMessages)
+        reverse('detail-pet', kwargs={'slug':self.pet})

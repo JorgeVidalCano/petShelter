@@ -112,6 +112,8 @@ $(document).ready(function () {
 $(document).ready(function () {
   var $form = $("#answerForm")
   $form.submit(function(event){
+    
+    console.log($form)
     event.preventDefault();
     var $formData = $(this).serialize();
     var $endpoint = window.location.origin + $form.attr("data-url") || window.location.href
@@ -123,10 +125,13 @@ $(document).ready(function () {
       success: handleFormSuccess,
       error: handleFormError,
     })
+  
+
     function handleFormSuccess(data, textStatus, jqXHR){
       console.log(textStatus)
       console.log(jqXHR)
       $form[0].reset();
+      
       var result = $(`<div class="comment media w-50 ml-auto mb-3">
                         <div class="media-body">
                           <p class="small font-weight-bold">You</p>
@@ -140,7 +145,8 @@ $(document).ready(function () {
       $("#message").append($(result));
       $(result).fadeIn(800);
       $("#message").scrollTop($("#message").height());
-    }
+
+  }
     function handleFormError(data, textStatus, errorThrown){
       console.log(data)
       console.log(textStatus)

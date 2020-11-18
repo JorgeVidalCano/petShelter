@@ -20,10 +20,12 @@
                         <h6 class="mb-0">{{ r.sender.username|title }}</h6>
                         {% else %}
                         <h6 class="mb-0">{{ r.shelter.name|title }}</h6>
+                        
                         {% endif %}
                         <span class="mb-0">{{ r.pet.name|title }}</span>
+                        
                       </div>
-                      <small class="small font-weight-bold">{{ r.date_created }}</small>
+                      <small class="small font-weight-bold">{{ r.lastMessage.date_created }}</small>
                     </div>
                   </div>
                 </div>
