@@ -72,7 +72,7 @@ class PetForm(forms.ModelForm):
             'color': forms.Select(choices=TYPE, attrs={'class':'form-control mb-4'}),
             'features':forms.CheckboxSelectMultiple(attrs={"queryset": Feature.objects.all(), 
                                                             "required":False,
-                                                            "class": ""}),          
+                                                            "class": ""}),
         }
 
 class ImageForm(forms.ModelForm):
@@ -85,6 +85,3 @@ class ImageForm(forms.ModelForm):
             'image': forms.FileInput(attrs={'class':'form-control-file'}),
         },
         labels={"mainPic": "Main image", "image": ""}
-
-#from django.forms.models import formset_factory
-#petImageFormset = formset_factory(ImageForm, can_delete=True,extra=3, max_num=3, validate_min=False)

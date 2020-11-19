@@ -107,6 +107,9 @@ footer{
     background-color: #0d447b;
 }
 
+#id_features{
+    list-style: none;
+}
 .activeChatRoom{
     background-color: #355070 !important;
 }

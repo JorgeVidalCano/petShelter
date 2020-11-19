@@ -62,7 +62,6 @@ class AnswerMessageAjax(LoginRequiredMixin, CreateView):
         chatRoom = ChatRoom.objects.filter(slug=self.kwargs['slug'])
         
         form.instance.sender = self.request.user
-        #form.instance.receiver = chatRoom[0].shelter.manager
         form.instance.chatroom = chatRoom[0]
         form.save()
 
