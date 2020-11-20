@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.urls import reverse
 from django.db import models
 from PIL import Image
-
+from django.core.paginator import Paginator
 class Shelter(models.Model):
     name = models.CharField(max_length=60, unique=True)
     about = models.TextField(max_length=300)
@@ -122,9 +122,6 @@ class Pet(models.Model):
     
     def getShelter(self):
         return self.shelter.name
-
-    # def getShelterSlug(self):
-    #     return self.shelter.slug
 
     def getAllFeatures(self):
         return Feature.objects.filter(pet=self)

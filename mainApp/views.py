@@ -41,7 +41,7 @@ class HomeView(TemplateView):
         
         # list of pets in shelters
         if shelters.count() > 1:            
-            # shelters are a refval so it keeps changing. A copy it's needed to keep order
+            # shelters are a refval so it keeps changing. A copy it's needed to keep the order
             shelterCopy=copy.copy(shelters)
             context['shelterName1'] = shelterCopy[0]
             context['shelterName2'] = shelterCopy[1]
@@ -49,7 +49,6 @@ class HomeView(TemplateView):
             filters["shelter"] = shelterCopy[0]
             context['petShelter1'] = Pet.objects.filter(**filters)[:ROWPET]
             context['slugShelter1'] = shelterCopy[0] # needed to get the url
-
 
             filters["shelter"] = shelterCopy[1]
             context['petShelter2'] = Pet.objects.filter(**filters)[:ROWPET]
@@ -468,15 +467,10 @@ class LazyReload(ListView):
             filters = {
                 "status__in":["Urgent","Adoption"]
             }
-
-            if self.kwargs.get("slug") is not None:
-                # if we have a slug means we are in shelter, so we get rid of the first 4 
-                # to avoid repetitions
-                filters["shelter__slug"] = self.kwargs.get("slug")
             try:
                 self.pet_list = Pet.objects.filter(**filters).order_by("?")
                 self.page = self.selectPetsByPage(self.pet_list)
-                ser_instance = self.getPets(self.page)
+                ser_instance = self.getPets(self.page)                
                 return JsonResponse({"instance": ser_instance, "end": False}, status=200)
             except Exception as ex:
                 print(ex)
@@ -515,3 +509,50 @@ class LazyReload(ListView):
             }
             pets.append(pet)
         return pets
+
+class LazyReloadShelters(ListView):
+    def get(self, request, *args, **kwargs):
+        
+        if self.request.is_ajax() and self.request.method == "GET":
+            
+            try:
+                self.shelter_list = Shelter.objects.all().order_by("?")
+                self.page = self.selectShelterPage(self.shelter_list)
+                ser_instance = self.getShelter(self.page)
+                return JsonResponse({"instance": ser_instance, "end": False}, status=200)
+            except Exception as ex:
+                print(ex)
+                return JsonResponse({"instance": None, "end": True}, status=200)    
+    
+    def selectShelterPage(self, shelter_list):
+        # we select the next 5 shelters
+        numberPage = self.kwargs.get("page")
+
+        splitPag = Paginator(self.shelter_list, round(self.shelter_list.count()/5))
+        self.page = splitPag.page(numberPage)
+        
+        return self.page
+    
+    def getShelter(self, page_shelter):
+        # we get the 5 shelter and serialize them
+        shelters = self.preserializer(page_shelter)
+        ser_instance = json.dumps(list(shelters))
+        
+        return ser_instance
+
+    def preserializer(self, page_shelter):
+        # the queryset and create a dict and add it to a list
+        shelters = []
+        shelter = {}
+        for p in page_shelter.object_list:
+            
+            shelter = {
+                "name": p.name.title(),
+                "about": p.about,
+                "location": p.location,
+                "image": p.image.url,
+                "petAdoption": p.AmountInAdoption(),
+                "slug" : f"{p.slug}",
+            }
+            shelters.append(shelter)
+        return shelters

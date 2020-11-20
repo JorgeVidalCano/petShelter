@@ -40,11 +40,11 @@
     object-fit: cover;
 }
 
-#pet-card > a:visited, #pet-card > a:link, .removeHoverLink:visited, .removeHoverLink:link{
+div[class*='pet-card'] > a:visited, div[class*='pet-card'] > a:link, .removeHoverLink:visited, .removeHoverLink:link{
     color: black !important;
 }
 
-#pet-card > a:hover, .removeHoverLink:hover{
+div[class*='pet-card'] > a:hover, .removeHoverLink:hover{
     text-decoration: none;
     color:#212529!important;
     /* color:#007bff!important ; */

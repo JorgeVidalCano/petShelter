@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from .models import Shelter, Images, Pet, Feature
 from django.forms import ModelForm
 from django import forms
@@ -74,6 +75,19 @@ class PetForm(forms.ModelForm):
                                                             "required":False,
                                                             "class": ""}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        age = cleaned_data.get("age")
+        weight = cleaned_data.get("weight")
+
+        if age is not None:
+            if age < 0:
+                raise ValidationError("The age cannot be negative.")
+        if weight is not None:
+            if weight < 0:
+                raise ValidationError("The weight cannot be negative.")
+
 
 class ImageForm(forms.ModelForm):
     class Meta:

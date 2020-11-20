@@ -11,7 +11,7 @@
 
 <div class="row mx-3 general-row justify-content-center">
   {% for pet in PetList %}
-  <div id="pet-card" class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+  <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 pet-card">
     <a href="{% url 'pet-detail' pet.slug %}">
     <div class="card mb-4 box-shadow" >
       <img id="pet-image-card" class="card-img-top border border-rounded" alt="{{ pet.images.name }}" src="{{ pet.petMainPic}}">
