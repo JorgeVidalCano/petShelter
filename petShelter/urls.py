@@ -12,6 +12,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='users/login.html'), name='logout'),
     path('deleteAccount/<int:pk>', DeleteAccount.as_view(), name='delete-account'),
     path('message/', include('contactMessages.urls')),
+    path('search/', include('searchEngine.urls')),
     path('', include('mainApp.urls')),
 ]
 

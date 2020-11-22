@@ -5,12 +5,12 @@ $(document).ready(function () {
     
     $(window).on("scroll", function(){
         if(call == true){
-            if( $(this).scrollTop() > ($(document).height()*0.20).toFixed(0) & end == false) {
-                call = false;
+          if( $(this).scrollTop() > ($(document).height()*0.20).toFixed(0) & end == false) {
+            call = false;
                 c ++
+                
                 var $endpoint = window.location.origin + "/lazyReload/shelters/" + c 
-                console.log(document.getElementsByClassName("removeHoverLink").attr("href"))
-                var $formData = $(this).serialize();
+                var $formData = "idShelter="+ $("#sheltersId").val();
                 $.ajax({
                   method: "GET",
                   url: $endpoint,
@@ -51,3 +51,60 @@ $(document).ready(function () {
       }}
     )
   })
+
+// Search Bar
+$(document).ready(function () {    
+  var $myForm = $("#inputFormId")
+  $myForm.keydown(function(event){
+      var $formData = $(this).serialize();
+      var $endpoint = window.location.origin + "/search/ajaxSearch"
+      
+    $.ajax({
+      method: "GET",
+      url: $endpoint,
+      data: $formData,
+      success: handleFormSuccess,
+      error: handleFormError,
+    })
+
+    function handleFormSuccess(data, textStatus, jqXHR){
+
+    var instance = JSON.parse(data["instance"]);
+    $(".searchResult").remove();
+    for ( var i = 0; i < instance.length; i++){      
+      var results = $(`
+                      <div class="container border p-1 searchResult">
+                        <a href="/shelters/${instance[i].slug}" class="removeHoverLink" /">
+                          <div class="row top-buffer align-items-center flex-row-reverse">
+                            <div class="col-lg-7 col-md-7 col-sm-12">
+                              <div class="row about-list">
+                                  <p>${instance[i].title}</p>
+                              </div>
+                            </div>
+                            <div class="col-lg-5 col-md-5 align-items-center flex-row-reverse">
+                                <img class="searchImg float-left " src="${instance[i].image}">
+                            </div>
+                          </div>
+                        </a>
+                      </div>
+        `);
+      $(results).insertAfter("#inputFormId");
+      }
+    }
+    function handleFormError(data, textStatus, errorThrown){
+      console.log(data)
+      console.log(textStatus)
+      console.log(errorThrown)
+    }
+  })
+  }
+)
+
+$(document).ready(function () {
+  $("#inputFormId").focusout(function() {
+    // deletes the search if focus is lost
+    setTimeout(function() { 
+      $(".searchResult").remove();
+    }, 200); 
+  });
+})

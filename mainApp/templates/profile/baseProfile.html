@@ -3,17 +3,14 @@
 
 <div class="container">
     <div class="row">
-      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-info sidebar collapse min-vh-100">
-        <div class="sidebar-sticky pt-3">
+      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse min-vh-100">
+        <div class="sidebar-sticky pt-3 font-weight-bolder">
           <ul class="nav flex-column">
-            <li class="nav-item" style="background-color: bisque;">
+            <li class="nav-item" >
               <a class="nav-link active" href="{% url 'profile-shelter' object.slug %}">Shelter</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'pets' object.slug %}">Pets</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'pets' object.slug %}">Account options</a>
             </li>
             <li class="nav-item">
               <a class="nav-link bg-danger" href="{% url 'delete-profile' object.slug %}">Delete Account</a>

@@ -68,13 +68,19 @@ div[class*='pet-card'] > a:hover, .removeHoverLink:hover{
     border-radius: 25%;
 }
 
-
 .error403{
     color: #FF7588;
 }
-nav, footer{
+
+nav, footer, .sidebarMenu{
     background-color: #047adbe7 !important;
-    color: #FF7588 !important;
+    /*color: #FF7588 !important;*/
+}
+footer{
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
 }
 
 .color-login{
@@ -90,13 +96,7 @@ nav, footer{
     height: 50%;
     overflow-y: scroll;
 }
-footer{
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    text-align: center;
-}
-
+/* Message app*/
 .board-Message-left{
     background-color: #76a5d4;
 }
@@ -106,12 +106,31 @@ footer{
 .chatRoom:hover{
     background-color: #0d447b;
 }
+.activeChatRoom{
+    background-color: #355070 !important;
+}
+/**/
+
+/* Search Bar */
+.searchResult{
+    background-color: #e7f0ff;
+   }
+.searchResult:hover{
+    background-color: #b8c1d0;
+}
+.searchImg{
+    max-width: 90%;
+  }
+  
+@media (max-width: 768px) {
+.searchImg{
+    display: none;
+}
+}
+/**/
 
 #id_features{
     list-style: none;
-}
-.activeChatRoom{
-    background-color: #355070 !important;
 }
 @media only screen and (max-width: 740px) {
     .img-carousel-shelter{

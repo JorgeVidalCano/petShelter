@@ -88,8 +88,9 @@ class ShelterView(TemplateView):
         # Call the base implementation first to get the context
         context = super().get_context_data(**kwargs)
         context['titleTab'] = 'Shelters'
-
-        context['shelter'] = Shelter.objects.filter().order_by("?")[:ROWPET]
+        shelterCopy = Shelter.objects.filter().order_by("?")[:ROWPET+1]
+        context['shelter'] = shelterCopy
+        context['shelterId'] = [s.id for s in shelterCopy] # we pass it so the lazy Search doesnot repeat
 
         return context
 
@@ -219,19 +220,6 @@ class DeleteShelterView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == shelter.manager:
             return True
         return False
-
-# class ProfileOptionsShelter(LoginRequiredMixin, UpdateView):
-#     template_name = "profile/profileOptions.html"
-#     form_class = UserUpdateForm
-#     model = User
-    
-#     def get_context_data(self, **kwargs):
-#         # Call the base implementation first to get the context
-#         context = super().get_context_data(**kwargs)
-#         context['titleTab'] = 'Options'
-#         #context['object'] = Shelter.objects.get(manager= self.request.user)
-        
-#         return context
 
 class ListPetsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     template_name = "profile/listPets.html"
@@ -371,7 +359,6 @@ class DeletePetProfileView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return False
 
 class CreateImageView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    #permision_required = ""
     template_name = "profile/createImagen.html"
     form_class = ImageForm
     model = Images
@@ -516,7 +503,10 @@ class LazyReloadShelters(ListView):
         if self.request.is_ajax() and self.request.method == "GET":
             
             try:
-                self.shelter_list = Shelter.objects.all().order_by("?")
+                filters={
+                    "id__in": self.request.GET['idShelter'].replace("[", "").replace("]", "").split(",")
+                }
+                self.shelter_list = Shelter.objects.all().exclude(**filters).order_by("?")
                 self.page = self.selectShelterPage(self.shelter_list)
                 ser_instance = self.getShelter(self.page)
                 return JsonResponse({"instance": ser_instance, "end": False}, status=200)
@@ -556,3 +546,16 @@ class LazyReloadShelters(ListView):
             }
             shelters.append(shelter)
         return shelters
+
+# class ProfileOptionsShelter(LoginRequiredMixin, UpdateView):
+#     template_name = "profile/profileOptions.html"
+#     form_class = UserUpdateForm
+#     model = User
+    
+#     def get_context_data(self, **kwargs):
+#         # Call the base implementation first to get the context
+#         context = super().get_context_data(**kwargs)
+#         context['titleTab'] = 'Options'
+#         #context['object'] = Shelter.objects.get(manager= self.request.user)
+        
+#         return context
