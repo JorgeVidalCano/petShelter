@@ -10,7 +10,7 @@
   <div class="collapse navbar-collapse font-weight-bolder" id="navbars">
     <ul class="navbar-nav mr-auto">
       {% if user.is_authenticated %}
-      <li class="nav-item">
+      <li class="nav-item active">
         <span class="nav-link">Hello {{user.username|title}}</span>
       </li>
       {% endif %}
@@ -20,35 +20,32 @@
       <li class="nav-item active">
         <a class="nav-link" href="{% url 'shelter-list' %}">Shelters</a>
       </li>
+      {% if user.is_staff %}
       <li class="nav-item active">
-          <a class="nav-link" href="#">Pets</a>
-        </li>
-        {% if user.is_staff %}
-        <li class="nav-item active">
-          <a class="nav-link" href="{% url 'profile' %}">Profile</a>
-        </li>
-        {% endif %}
-        {% if user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'board-message' %}">Messages</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-        </li>
-        {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'login' %}">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'register' %}">Create account</a>
-        </li>
-        {% endif %}
-        {% if user.is_superuser %}
-        <li class="nav-item">
-          <a class="nav-link" href="/admin">Admin</a>
-        </li>
-        {% endif %}
-      </ul>
+        <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+      </li>
+      {% endif %}
+      {% if user.is_authenticated %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'board-message' %}">Messages</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+      </li>
+      {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'login' %}">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'register' %}">Create account</a>
+      </li>
+      {% endif %}
+      {% if user.is_superuser %}
+      <li class="nav-item">
+        <a class="nav-link" href="/admin">Admin</a>
+      </li>
+      {% endif %}
+    </ul>
   </div>
 </div>
 </nav>

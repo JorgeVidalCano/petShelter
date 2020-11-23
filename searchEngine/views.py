@@ -11,17 +11,21 @@ import json
 
 class SearchView(ListView):
     model = Pet
-    template_name = "mainApp/home.html"
+    template_name = "mainApp/searchResult.html"
     
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
-        context['titleTab'] = 'Home'
-
-        context['title'] = f"Results for '{self.request.GET.get('q')}'"
+        
         query = self.request.GET.get('q')
-        post_list = Post.objects.filter( Q(title__icontains=query) & Q(publish=True) )
-        context['posts'] = post_list
+        shelter_list = Shelter.objects.filter( Q(name__icontains=query) | Q(location__icontains=query))[:6]
+        
+        context.update({
+            'titleTab': 'Shelters',
+            'title': f"Results for '{self.request.GET.get('q')}'",
+            'shelter': shelter_list,
+            'shelterId': [s.id for s in shelter_list] # we pass it so the lazy Search doesnot repeat
+        })
         return context
 
 class AjaxSearchView(ListView):
@@ -36,7 +40,6 @@ class AjaxSearchView(ListView):
             if query is None:
                 return JsonResponse({"error": "No results"}, status=400)
             
-
             querySet = Shelter.objects.filter( Q(name__icontains=query) | Q(location__icontains=query))[:6]
 
             objList = []

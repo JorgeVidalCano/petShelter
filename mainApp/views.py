@@ -22,7 +22,7 @@ from django.http import JsonResponse
 from contactMessages.forms import CommentForm
 import copy
 import json
-
+from searchEngine.forms import petSearchForm
 ROWPET = 3 # Const. amount of pets per row
 
 class HomeView(TemplateView):
@@ -32,27 +32,30 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get the context
         context = super().get_context_data(**kwargs)
-        context['titleTab'] = 'Home'
-        
         filters = {"status__in":["Urgent","Adoption"]}
         
-        context['pets'] = Pet.objects.filter(**filters).order_by("?")[:ROWPET] # all pets
+        context.update({
+            'titleTab': 'Home',
+            'pets': Pet.objects.filter(**filters).order_by("?")[:ROWPET],
+            'form': petSearchForm()
+        })
         shelters = Shelter.objects.order_by("?")[:2]
-        
         # list of pets in shelters
         if shelters.count() > 1:            
             # shelters are a refval so it keeps changing. A copy it's needed to keep the order
             shelterCopy=copy.copy(shelters)
-            context['shelterName1'] = shelterCopy[0]
-            context['shelterName2'] = shelterCopy[1]
 
-            filters["shelter"] = shelterCopy[0]
-            context['petShelter1'] = Pet.objects.filter(**filters)[:ROWPET]
-            context['slugShelter1'] = shelterCopy[0] # needed to get the url
-
-            filters["shelter"] = shelterCopy[1]
-            context['petShelter2'] = Pet.objects.filter(**filters)[:ROWPET]
-            context['slugShelter2'] = shelterCopy[1]
+            context.update({
+                'pets': Pet.objects.filter(**filters).order_by("?")[:ROWPET],
+                'shelterName1': shelterCopy[0],
+                'shelterName2': shelterCopy[1],
+                'shelter': shelterCopy[0],
+                'petShelter1': Pet.objects.filter(**filters)[:ROWPET],
+                'slugShelter1': shelterCopy[0], # needed to get the url
+                'shelter': shelterCopy[1],
+                'petShelter2': Pet.objects.filter(**filters)[:ROWPET],
+                'slugShelter2':shelterCopy[1]
+            })
 
         return context
 
@@ -87,11 +90,14 @@ class ShelterView(TemplateView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get the context
         context = super().get_context_data(**kwargs)
-        context['titleTab'] = 'Shelters'
         shelterCopy = Shelter.objects.filter().order_by("?")[:ROWPET+1]
-        context['shelter'] = shelterCopy
-        context['shelterId'] = [s.id for s in shelterCopy] # we pass it so the lazy Search doesnot repeat
 
+        context.update({
+            'titleTab': 'Shelters',
+            'title': 'Shelters',
+            'shelter': shelterCopy,
+            'shelterId': [s.id for s in shelterCopy] # we pass it so the lazy Search doesnot repeat
+        })
         return context
 
 class DetailShelterView(DetailView):

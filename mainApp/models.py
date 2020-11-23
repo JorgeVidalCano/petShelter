@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.db import models
 from PIL import Image
 from django.core.paginator import Paginator
+
 class Shelter(models.Model):
     name = models.CharField(max_length=60, unique=True)
     about = models.TextField(max_length=300)
@@ -75,7 +76,7 @@ class Pet(models.Model):
     color = models.CharField(max_length=7, choices=COLOR, default="FFF")
     shelter = models.ForeignKey(Shelter, related_name="albergue", default=None, on_delete=models.CASCADE)
     date_created = models.DateField(default=timezone.now)
-    slug = models.SlugField(unique=True, blank=True) #blank is true but slug is assigned before saving the pet
+    slug = models.SlugField(unique=True, blank=True) #blank is true but the slug is assigned before saving the pet
     features = models.ManyToManyField("Feature", related_name="pet_atributos_many", blank=True)
 
     def __str__(self):
@@ -163,12 +164,6 @@ class Images(models.Model):
     def __str__(self):
         return self.name
 
-    # def allPics(self):
-        # return self.objects.all()
-    
-    # def firstPic(self):
-        # return self.objects.first()
-    
     def petName(self):
         return self.pet.name
     

@@ -5,6 +5,24 @@
 {% carousel %}
 
 <div class="container-fluid">
+    <div class="container mt-2 pt-4 bg-info border box-shadow">
+        <div class="row">
+            <div class="col-6">
+                {{ form.name }}
+            </div>
+            <div class="col-3">
+                {{ form.sex }}
+            </div>
+            <div class="col-3">
+                {{ form.kind }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                {{ form.status }}
+            </div>
+        </div>
+    </div>
     {% include "mainApp/pet_card.html" with CategoryName=shelterName1 PetList=petShelter1 linkTo=slugShelter1 %}
     {% include "mainApp/pet_card.html" with CategoryName=shelterName2 PetList=petShelter2 linkTo=slugShelter2 %}
     {% include "mainApp/pet_card.html" with CategoryName="All pets" PetList=pets %}
