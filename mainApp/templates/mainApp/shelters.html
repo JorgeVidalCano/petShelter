@@ -2,14 +2,21 @@
 {% block content %}
 
 <section class="bg-light"> 
-    <div class="container">
-    <form id="searchFormId" action="{% url 'search-results' %}" method="get">
-        <input id="inputFormId" class="form-control" name="q" type="text" placeholder="Search by name or location" autocomplete="off">
-    </form>
+    <div class="container my-2 py-4 bg-info border box-shadow">
+        <div class="row">
+            <div class="col-1">
+                <span>Search:</span>
+            </div>
+            <div class="col-8">
+                <form id="searchFormId" class="" action="{% url 'search-results' %}" method="get">
+                    <input id="inputFormId" class="form-control" name="q" type="text" placeholder="Search by name or location" autocomplete="off">
+                </form>
+            </div>
+        </div>
     </div>
     <input type="hidden" id="sheltersId" value="{{shelterId}}">
     
-    {% include "mainApp/shelter_card.html" with shelterList=shelter title=title %} 
+    {% include "mainApp/shelter_card.html" %} 
 </section>
 
 {% endblock content %}

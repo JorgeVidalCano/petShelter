@@ -1,0 +1,51 @@
+{% extends "shareblocks/base.html" %}
+{% block content %}
+
+<section class="bg-light"> 
+    <div class="container mt-2 pt-4 bg-info border box-shadow">
+        <form id="searchFormId" action="{% url 'search-results' %}" method="get">
+            <div class="row">
+                <div class="col-6">
+                    <input class="form-control" name="pet" type="text" placeholder="Search by name" autocomplete="off">
+                </div>
+                <div class="col-3">
+                    <select class="form-control mb-4" id="sex" name="sex">
+                      <option value="None">Sex</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Unknown">Unknown</option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <select class="form-control mb-4" id="kind" name="kind">
+                        <option value="None">Kind</option>
+                        <option value="Cat">Cat</option>
+                        <option value="Dog">Dog</option>
+                        <option value="Guinea pig">Guinea pig</option>
+                        <option value="Rabbit">Rabbit</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <select class="form-control mb-4" id="state" name="state">
+                        <option value="None">State</option>
+                        <option value="Adoption">Adoption</option>
+                        <option value="Urgent">Urgent</option>                        
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="inputFormId" class="container w-50">
+    </div>
+        
+    {% include "mainApp/pet_card.html" %} 
+</section>
+
+{% endblock content %}
+{% load static %}
+{% block js %} 
+    <script type="text/javascript" src="{% static 'mainApp/javascript/homeJquery.js' %}"></script>
+{% endblock js %}

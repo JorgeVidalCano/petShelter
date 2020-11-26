@@ -1,6 +1,6 @@
 <div class="container">
     <h1 class="display-3">{{title}}</h1>
-    {% for s in shelterList %}
+    {% for s in shelter %}
     <a class="removeHoverLink petShelter" href="{% url 'shelter-detail' s.slug %}">
         <div class="row my-4 p-2 border box-shadow">
             <div class="col-md-7">

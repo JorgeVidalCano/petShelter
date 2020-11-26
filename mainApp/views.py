@@ -83,6 +83,23 @@ class DetailPetView(DetailView):
 
         return context
 
+class PetsView(ListView):
+    template_name = "mainApp/pets.html"
+    model = Pet
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super().get_context_data(**kwargs)
+        petsCopy = Pet.objects.filter().order_by("?")[:ROWPET+5]
+
+        context.update({
+            'titleTab': 'Pets',
+            'title': 'Pets',
+            'PetList': petsCopy,
+            'shelterId': [s.id for s in petsCopy] # we pass it so the lazy Search doesnt repeat
+        })
+        return context
+
 class ShelterView(TemplateView):
     template_name = "mainApp/shelters.html"
     model = Shelter
@@ -96,7 +113,7 @@ class ShelterView(TemplateView):
             'titleTab': 'Shelters',
             'title': 'Shelters',
             'shelter': shelterCopy,
-            'shelterId': [s.id for s in shelterCopy] # we pass it so the lazy Search doesnot repeat
+            'shelterId': [s.id for s in shelterCopy] # we pass it so the lazy Search doesnt repeat
         })
         return context
 

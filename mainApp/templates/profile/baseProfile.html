@@ -7,13 +7,13 @@
         <div class="sidebar-sticky pt-3 font-weight-bolder">
           <ul class="nav flex-column">
             <li class="nav-item" >
-              <a class="nav-link active" href="{% url 'profile-shelter' object.slug %}">Shelter</a>
+              <a class="nav-link active text-white" href="{% url 'profile-shelter' object.slug %}">Shelter</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'pets' object.slug %}">Pets</a>
+              <a class="nav-link text-white" href="{% url 'pets' object.slug %}">Pets</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link bg-danger" href="{% url 'delete-profile' object.slug %}">Delete Account</a>
+              <a class="nav-link text-white" href="{% url 'delete-profile' object.slug %}">Delete Account</a>
             </li>
           </ul>
         </div>

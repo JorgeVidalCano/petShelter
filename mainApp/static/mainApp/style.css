@@ -74,8 +74,8 @@ div[class*='pet-card'] > a:hover, .removeHoverLink:hover{
 
 nav, footer, .sidebarMenu{
     background-color: #047adbe7 !important;
-    /*color: #FF7588 !important;*/
 }
+
 footer{
     left: 0;
     bottom: 0;
@@ -113,13 +113,14 @@ footer{
 
 /* Search Bar */
 .searchResult{
+    
     background-color: #e7f0ff;
    }
 .searchResult:hover{
     background-color: #b8c1d0;
 }
 .searchImg{
-    max-width: 90%;
+    max-width: 70%;
   }
   
 @media (max-width: 768px) {

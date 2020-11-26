@@ -37,21 +37,43 @@ class AjaxSearchView(ListView):
         if self.request.is_ajax() and self.request.method == "GET":
             
             query = self.request.GET.get('q')
-            if query is None:
-                return JsonResponse({"error": "No results"}, status=400)
-            
-            querySet = Shelter.objects.filter( Q(name__icontains=query) | Q(location__icontains=query))[:6]
-
             objList = []
             obj = {}
+            if query:
+                querySet = Shelter.objects.filter( Q(name__icontains=query) | Q(location__icontains=query))[:6]
 
-            for q in querySet:
-                obj = {
-                    "title": q.name.title(),
-                    "image": q.image.url,
-                    "slug": q.slug,
-                }
-                objList.append(obj)
+                for q in querySet:
+                    obj = {
+                        "name": q.name.title(),
+                        "location": q.location,
+                        "image": q.image.url,
+                        "slug": q.slug,
+                    }
+                    objList.append(obj) 
+            else:
+                filters= {}
+                query = self.request.GET.get('sex')
+                if query != 'None':
+                    filters["sex"] = query
+                query = self.request.GET.get('kind')
+                if query != 'None':
+                    filters["kind"] = query
+                query = self.request.GET.get('state')
+                if query != 'None':
+                    filters["status"] = query
+
+                query = self.request.GET.get('pet')
+                querySet = Pet.objects.filter(Q(name__icontains=query), **filters)[:8]
+
+                for q in querySet:
+                    obj = {
+                        "title": q.name.title(),
+                        "image": q.petMainPic(),
+                        "slug": q.slug,
+                    }
+                    objList.append(obj) 
+
             instance = json.dumps(list(objList))
-            return JsonResponse({"instance": instance}, status=200)
 
+            return JsonResponse({"instance": instance}, status=200)
+        return JsonResponse({"error": "No results"}, status=400)
