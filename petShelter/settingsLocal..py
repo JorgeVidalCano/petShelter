@@ -1,12 +1,11 @@
-# import django_heroku
 from pathlib import Path
 import os
 import ast
 
-# file = open("../Passwords.txt", "r")
-# content = file.read()
-# secretVariable = ast.literal_eval(content)
-# file.close()
+file = open("../Passwords.txt", "r")
+content = file.read()
+secretVariable = ast.literal_eval(content)
+file.close()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,12 +15,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = secretVariable["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.environ.get("DEBUG") == 'True')
+DEBUG = secretVariable["DEBUG_VALUE"]
 
-ALLOWED_HOSTS = ["localhost", "addopt-your-pet-jorge-vidal.herokuapp.com/"]
+ALLOWED_HOSTS = ["addopt-your-pet-jorge-vidal.herokuapp.com/"]
 
 
 # Application definition
@@ -94,7 +93,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'petshelter',
         'USER': 'jorge',
-        'PASSWORD': os.environ.get("POSTGRESQL"),
+        'PASSWORD': secretVariable['POSTGRESQL_PASSWORD'],
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -148,12 +147,3 @@ MEDIA_URL = '/media/'
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "login"
 LOGIN_URL = 'login'
-
-AWS_S3_FILE_OVERWRITE=False # Rename a file if the name is the same to a previous one
-AWS_DEFAULT_ACL=None
-AWS_S3_SIGNATURE_VERSION='s3v4'
-AWS_S3_REGION_NAME='eu-west-3'
-
-DEFAULT_FILE_STORAGE="storages.backends.s3boto3.S3Boto3Storage"
-
-# django_heroku.settings(locals())
