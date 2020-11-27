@@ -78,8 +78,10 @@ $(document).ready(function () {
                         <a href="/shelters/${instance[i].slug}" class="removeHoverLink" /">
                           <div class="row top-buffer align-items-center flex-row-reverse">
                             <div class="col-lg-7 col-md-7 col-sm-12">
-                              <h3 class="h3 text-primary">${instance[i].name}</h3>
-                              <h6>${instance[i].location}</h6>
+                              <h3 class="h4 text-primary">${instance[i].name}</h3>
+                              <h6>${instance[i].about}</h6>
+                              <h6>Pets in adoption: ${instance[i].adoption}</h6>
+                              <h6>Location: ${instance[i].location}</h6>
                             </div>
                             <div class="col-lg-5 col-md-5 align-items-center flex-row-reverse">
                                 <img class="searchImg float-left thumbnail" src="${instance[i].image}">

@@ -65,10 +65,10 @@ class ImageAdmin(admin.ModelAdmin):
 @admin.register(Pet)
 class PetAdmin(admin.ModelAdmin):
     inlines = [ImageListAdmin, FeatureListAdmin]
-    search_fields = ['name', 'age', 'sex', 'kind', 'weight', 'visits', 'color', 'shelter', 'date_created']
-    readonly_fields = ['visits', 'date_created', 'slug']
-    list_display = ['name', 'age', 'sex', 'kind', 'weight', 'visits', 'color', 'shelter', 'date_created', 'thumbnail_preview_list']
-    ordering = ('name', 'age', 'sex', 'kind', 'weight', 'visits', 'color', 'shelter', 'date_created')
+    search_fields = ['name', 'age', 'sex', 'kind', 'weight', 'color', 'shelter', 'date_created']
+    readonly_fields = ['date_created', 'slug']
+    list_display = ['name', 'age', 'sex', 'kind', 'weight', 'color', 'shelter', 'date_created', 'thumbnail_preview_list']
+    ordering = ('name', 'age', 'sex', 'kind', 'weight', 'color', 'shelter', 'date_created')
 
     def thumbnail_preview(self, obj):
         return obj.thumbnail_preview

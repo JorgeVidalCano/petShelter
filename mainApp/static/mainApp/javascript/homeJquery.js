@@ -82,13 +82,12 @@ $(document).ready(function () {
     $(".searchResult").remove();
     for ( var i = 0; i < instance.length; i++){      
       var results = $(`
-                      <div class="container border p-1 searchResult">
+                      <div class="container border p-1 searchResult col-4">
                         <a href="/pet/${instance[i].slug}" class="removeHoverLink" /">
                           <div class="row top-buffer align-items-center flex-row-reverse">
                             <div class="col-lg-7 col-md-7 col-sm-12">
-                              <div class="row about-list">
-                                  <p>${instance[i].title}</p>
-                              </div>
+                                <h3 class="h4 text-primary">${instance[i].name}</h3>
+                                <h6>Location: ${instance[i].location}</h6>
                             </div>
                             <div class="col-lg-5 col-md-5 align-items-center flex-row-reverse">
                                 <img class="searchImg float-left " src="${instance[i].image}">
@@ -109,11 +108,21 @@ $(document).ready(function () {
   }
 )
 
-$(document).ready(function () {
-  $("#inputFormId").focusout(function() {
-    // deletes the search if focus is lost
-    setTimeout(function() { 
-      $(".searchResult").remove();
-    }, 200); 
-  });
-})
+$(document).ready(function () {    
+  var $myForm = $("#searchFormId")
+  
+  $myForm.on('submit',function(e){
+    e.preventDefault();
+
+  })
+  }
+)
+
+// $(document).ready(function () {
+//   $("#inputFormId").focusout(function() {
+//     // deletes the search if focus is lost
+//     setTimeout(function() { 
+//       $(".searchResult").remove();
+//     }, 200); 
+//   });
+// })

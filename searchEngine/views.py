@@ -41,12 +41,14 @@ class AjaxSearchView(ListView):
             obj = {}
             if query:
                 querySet = Shelter.objects.filter( Q(name__icontains=query) | Q(location__icontains=query))[:6]
-
                 for q in querySet:
+                    
                     obj = {
                         "name": q.name.title(),
+                        "about": f"{q.about[:50]}..." if len(q.about) > 50  else q.about[:50],
                         "location": q.location,
                         "image": q.image.url,
+                        "adoption": q.AmountInAdoption(),
                         "slug": q.slug,
                     }
                     objList.append(obj) 
@@ -63,11 +65,12 @@ class AjaxSearchView(ListView):
                     filters["status"] = query
 
                 query = self.request.GET.get('pet')
-                querySet = Pet.objects.filter(Q(name__icontains=query), **filters)[:8]
+                querySet = Pet.objects.filter(Q(name__icontains=query), **filters)[:9]
 
                 for q in querySet:
                     obj = {
-                        "title": q.name.title(),
+                        "name": q.name.title(),
+                        "location": q.shelter.location,
                         "image": q.petMainPic(),
                         "slug": q.slug,
                     }

@@ -5,7 +5,7 @@
     <div class="container mt-2 pt-4 bg-info border box-shadow">
         <form id="searchFormId" action="{% url 'search-results' %}" method="get">
             <div class="row">
-                <div class="col-6">
+                <div class="col-3">
                     <input class="form-control" name="pet" type="text" placeholder="Search by name" autocomplete="off">
                 </div>
                 <div class="col-3">
@@ -26,8 +26,6 @@
                         <option value="Other">Other</option>
                     </select>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col-3">
                     <select class="form-control mb-4" id="state" name="state">
                         <option value="None">State</option>
@@ -37,8 +35,11 @@
                 </div>
             </div>
         </form>
-    </div>
-    <div id="inputFormId" class="container w-50">
+        <div class="container">
+            <div id="inputFormId" class="row">
+
+            </div>
+        </div>
     </div>
         
     {% include "mainApp/pet_card.html" %} 
