@@ -45,18 +45,16 @@ class HomeView(TemplateView):
             # shelters are a refval so it keeps changing. A copy it's needed to keep the order
             shelterCopy=copy.copy(shelters)
 
-            context.update({
-                'pets': Pet.objects.filter(**filters).order_by("?")[:ROWPET],
-                'shelterName1': shelterCopy[0],
-                'shelterName2': shelterCopy[1],
-                'shelter': shelterCopy[0],
-                'petShelter1': Pet.objects.filter(**filters)[:ROWPET],
-                'slugShelter1': shelterCopy[0], # needed to get the url
-                'shelter': shelterCopy[1],
-                'petShelter2': Pet.objects.filter(**filters)[:ROWPET],
-                'slugShelter2':shelterCopy[1]
-            })
+            context['shelterName1'] = shelterCopy[0]	
+            context['shelterName2'] = shelterCopy[1]	
 
+            filters["shelter"] = shelterCopy[0]	
+            context['petShelter1'] = Pet.objects.filter(**filters)[:ROWPET]	
+            context['slugShelter1'] = shelterCopy[0] # needed to get the url
+            filters["shelter"] = shelterCopy[1]
+            context['petShelter2'] = Pet.objects.filter(**filters)[:ROWPET]
+            context['slugShelter2'] = shelterCopy[1]
+            
         return context
 
 class DetailPetView(DetailView):

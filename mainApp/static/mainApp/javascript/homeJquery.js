@@ -35,7 +35,7 @@ $(document).ready(function () {
                         <h3><span class="badge badge-primary ${ instance[i].status }">${ instance[i].status }</span></h3>
                       </div>
                       <div class="card-body">
-                        <p class="card-text"><b>${ instance[i].name }</b></p>
+                        <p class="card-text text-primary"><b>${ instance[i].name }</b></p>
                         <p class="card-text">Place ${ instance[i].shelter }</p>
                         <p class="card-text">Sex ${ instance[i].sex }</p>
                         <div class="d-flex justify-content-between align-items-center">

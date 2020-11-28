@@ -18,11 +18,11 @@ class ImagesCarousel(models.Model):
         if self.name == "":
             self.name = self.image.url.split("/")[-1]
         super(ImagesCarousel, self).save(*args, **kwargs)
-        img = Image.open(self.image.path)
+        # img = Image.open(self.image.path)
 
-        output_size = (1200, 450)
-        img.thumbnail(output_size)
-        img.save(self.image.path)
+        # output_size = (1200, 450)
+        # img.thumbnail(output_size)
+        # img.save(self.image.path)
 
     @property
     def thumbnail_preview_detail(self):
