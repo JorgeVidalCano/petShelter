@@ -1,3 +1,4 @@
+import django_heroku
 from pathlib import Path
 import os
 import ast
@@ -20,7 +21,7 @@ SECRET_KEY = secretVariable["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = secretVariable["DEBUG_VALUE"]
 
-ALLOWED_HOSTS = ["addopt-your-pet-jorge-vidal.herokuapp.com/"]
+ALLOWED_HOSTS = ["localhost", "addopt-your-pet-jorge-vidal.herokuapp.com/"]
 
 
 # Application definition
@@ -37,12 +38,14 @@ INSTALLED_APPS = [
     'carousel',
     'users',
     'contactMessages',
-    'searchEngine'
+    'searchEngine',
+    'storages'
 
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -147,3 +150,12 @@ MEDIA_URL = '/media/'
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "login"
 LOGIN_URL = 'login'
+
+AWS_S3_FILE_OVERWRITE=False # Rename a file if the name is the same to a previous one
+AWS_DEFAULT_ACL=None
+AWS_S3_SIGNATURE_VERSION='s3v4'
+AWS_S3_REGION_NAME='eu-west-3'
+
+DEFAULT_FILE_STORAGE="storages.backends.s3boto3.S3Boto3Storage"
+
+django_heroku.settings(locals())
