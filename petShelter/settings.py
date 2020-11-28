@@ -13,7 +13,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.environ.get("DEBUG") == 'True')
+
+# DEBUG = (os.environ.get("DEBUG") == 'True')
+DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "addopt-your-pet-jorge-vidal.herokuapp.com"]
 
@@ -85,16 +87,16 @@ WSGI_APPLICATION = 'petShelter.wsgi.application'
 # }
  
  
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'petshelter',
-#         'USER': 'jorge',
-#         'PASSWORD': os.environ.get("POSTGRESQL"),
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'petshelter',
+        'USER': 'jorge',
+        'PASSWORD': os.environ.get("POSTGRESQL"),
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
  
  
 
@@ -151,5 +153,9 @@ AWS_S3_SIGNATURE_VERSION='s3v4'
 AWS_S3_REGION_NAME='eu-west-3'
 
 DEFAULT_FILE_STORAGE="storages.backends.s3boto3.S3Boto3Storage"
+
+AWS_ACCESS_KEY_ID="AKIA6CVJWFGH7T2OWS3P"
+AWS_SECRET_ACCESS_KEY="5EiEODyIAnCl4irLBrJ0wx6bLpf6PfBvGQ+XWqth"
+AWS_STORAGE_BUCKET_NAME="addopt-your-pet"
 
 django_heroku.settings(locals())
