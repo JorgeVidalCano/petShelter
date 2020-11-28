@@ -1,12 +1,6 @@
 import django_heroku
 from pathlib import Path
 import os
-# import ast
-
-# file = open("../Passwords.txt", "r")
-# content = file.read()
-# secretVariable = ast.literal_eval(content)
-# file.close()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -91,16 +85,16 @@ WSGI_APPLICATION = 'petShelter.wsgi.application'
 # }
  
  
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'petshelter',
-        'USER': 'jorge',
-        'PASSWORD': os.environ.get("POSTGRESQL"),
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'petshelter',
+#         'USER': 'jorge',
+#         'PASSWORD': os.environ.get("POSTGRESQL"),
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
  
  
 
