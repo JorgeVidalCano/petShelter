@@ -1,1 +1,1 @@
-web: gunicorn petShelter.wsgi
+web: gunicorn petShelter.wsgi --log-file -
