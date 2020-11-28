@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'carousel',
     'users',
     'contactMessages',
-    'searchEngine'
+    'searchEngine',
+    'storages',
 
 ]
 
@@ -89,16 +90,16 @@ WSGI_APPLICATION = 'petShelter.wsgi.application'
 # }
  
  
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'petshelter',
-        'USER': 'jorge',
-        'PASSWORD': os.environ.get("POSTGRESQL"),
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'petshelter',
+#         'USER': 'jorge',
+#         'PASSWORD': os.environ.get("POSTGRESQL"),
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
  
  
 
