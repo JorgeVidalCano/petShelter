@@ -1,7 +1,7 @@
 import django_heroku
 from pathlib import Path
 import os
-import ast
+# import ast
 
 # file = open("../Passwords.txt", "r")
 # content = file.read()
@@ -21,7 +21,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = (os.environ.get("DEBUG") == 'True')
 
-ALLOWED_HOSTS = ["localhost", "addopt-your-pet-jorge-vidal.herokuapp.com/"]
+ALLOWED_HOSTS = ["localhost", "addopt-your-pet-jorge-vidal.herokuapp.com"]
 
 
 # Application definition
@@ -90,16 +90,16 @@ WSGI_APPLICATION = 'petShelter.wsgi.application'
 # }
  
  
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'petshelter',
-#         'USER': 'jorge',
-#         'PASSWORD': os.environ.get("POSTGRESQL"),
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'petshelter',
+        'USER': 'jorge',
+        'PASSWORD': os.environ.get("POSTGRESQL"),
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
  
  
 
