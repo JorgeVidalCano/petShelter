@@ -8,31 +8,32 @@
                         <p class="text-h3">{{ paragraph }}</p>
                     </div>
                 </div>
+                <div class="col">
+                    {% include "shareblocks/errorMessages.html" %} {% comment %} loads error messages {% endcomment %}
+                </div>
                 <div class="row">
                     <div class="col">
-                        {% include "shareblocks/errorMessages.html" %} {% comment %} loads error messages {% endcomment %}
-                    </div>
-                </div>
-                <form class="form-signin" method="POST" enctype="multipart/form-data">
-                    <div class="row align-items-center justify-content-center"">
-                    {% csrf_token %}    
-                        <div class="col-{{colSize}} mt-4">
-                            {{ form }}                      
-                        </div>
-                        {% if object.image.url %}
-                        <div class="col-{{colSize}} my-4 border-round">
-                            <img id="pet-image-card" class="img-fluid rounded mb-3 mb-md-0 box-shadow" src="{{ object.image.url }}" alt="{{ s.name }}">
-                        </div>
-                        {% endif %}
-                        <div class="container">
-                            <div class="row justify-content-center mt-4">
-                                <div class="col-{{colSize}}">
-                                    <button class="btn btn-primary mt-4 btn-block">{{ buttonName }}</button>
+                    <form class="form-signin" method="POST" enctype="multipart/form-data">
+                        <div class="row align-items-center justify-content-center"">
+                        {% csrf_token %}    
+                            <div class="col-{{colSize}} mt-4">
+                                {{ form }}                      
+                            </div>
+                            {% if object.image.url %}
+                            <div class="col-{{colSize}} my-4 border-round">
+                                <img id="pet-image-card" class="img-fluid rounded mb-3 mb-md-0 box-shadow" src="{{ object.image.url }}" alt="{{ s.name }}">
+                            </div>
+                            {% endif %}
+                            <div class="container">
+                                <div class="row justify-content-center mt-4">
+                                    <div class="col-{{colSize}}">
+                                        <button class="btn btn-primary mt-4 btn-block">{{ buttonName }}</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

@@ -1,3 +1,4 @@
+from django.utils.crypto import get_random_string
 from django.utils.html import mark_safe
 from mainApp.models import Image
 from django.db import models
@@ -16,13 +17,8 @@ class ImagesCarousel(models.Model):
     
     def save(self, *args, **kwargs):
         if self.name == "":
-            self.name = self.image.url.split("/")[-1]
+            self.name = {get_random_string(length=9)}
         super(ImagesCarousel, self).save(*args, **kwargs)
-        # img = Image.open(self.image.path)
-
-        # output_size = (1200, 450)
-        # img.thumbnail(output_size)
-        # img.save(self.image.path)
 
     @property
     def thumbnail_preview_detail(self):
