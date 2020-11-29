@@ -17,7 +17,7 @@ class ImagesCarousel(models.Model):
     
     def save(self, *args, **kwargs):
         if self.name == "":
-            self.name = {get_random_string(length=9)}
+            self.name = get_random_string(length=9)
         super(ImagesCarousel, self).save(*args, **kwargs)
 
     @property
