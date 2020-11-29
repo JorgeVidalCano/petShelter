@@ -14,8 +14,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = (os.environ.get("DEBUG") == 'True')
-#DEBUG = True
+# DEBUG = (os.environ.get("DEBUG") == 'True')
+DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "addopt-your-pet-jorge-vidal.herokuapp.com"]
 
