@@ -1,5 +1,6 @@
 from django.template.defaultfilters import slugify
 from django.utils.crypto import get_random_string
+from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.utils.html import mark_safe
 from django.utils import timezone
@@ -20,8 +21,11 @@ class Shelter(models.Model):
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
+    def get_success_url(self):
         return reverse('profile-shelter', kwargs={'slug':self.slug})
+
+    def get_absolute_url(self):
+        return reverse('shelter-new')
     
     def save(self, *args, **kwargs):
        # creates a unique slug

@@ -47,7 +47,6 @@ class AnswerMessageAjax(LoginRequiredMixin, CreateView):
     def get(self, request, *args, **kwargs):
         message = Message.objects.filter(chatroom__slug=self.kwargs['slug']).order_by('-date_created')
         
-        #message.markAsRead(self.request.user)
         message_serialized = serializers.serialize('json', list(message))
         newMessageUrl = self.request.path_info + "newMessage/"
         return JsonResponse({
@@ -85,7 +84,6 @@ class CreateMessage(LoginRequiredMixin, CreateView):
         pet = Pet.objects.get(slug=self.kwargs['pet'])       
         newChat = ChatRoom.objects.get_or_create(shelter= pet.shelter, sender= self.request.user, pet= pet)
         form.instance.sender = self.request.user
-        #form.instance.receiver = pet.shelter.manager
         form.instance.chatroom = newChat[0]
         form.save()
         return JsonResponse({"instance": "Message sent."}, status=200)

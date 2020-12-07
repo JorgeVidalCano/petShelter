@@ -5,10 +5,10 @@
     <div class="container mt-2 pt-4 bg-info border box-shadow">
         <form id="searchFormId" action="{% url 'search-results' %}" method="get">
             <div class="row">
-                <div class="col-3">
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6">
                     <input class="form-control" name="pet" type="text" placeholder="Search by name" autocomplete="off">
                 </div>
-                <div class="col-3">
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6">
                     <select class="form-control mb-4" id="sex" name="sex">
                       <option value="None">Sex</option>
                       <option value="Male">Male</option>
@@ -16,7 +16,7 @@
                       <option value="Unknown">Unknown</option>
                     </select>
                 </div>
-                <div class="col-3">
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6">
                     <select class="form-control mb-4" id="kind" name="kind">
                         <option value="None">Kind</option>
                         <option value="Cat">Cat</option>
@@ -26,7 +26,7 @@
                         <option value="Other">Other</option>
                     </select>
                 </div>
-                <div class="col-3">
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6">
                     <select class="form-control mb-4" id="state" name="state">
                         <option value="None">State</option>
                         <option value="Adoption">Adoption</option>

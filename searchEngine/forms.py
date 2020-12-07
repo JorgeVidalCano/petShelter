@@ -1,6 +1,7 @@
 from mainApp.models import Pet
 from django import forms
     
+# IT is unused
 SEX = (
     ('Male', 'Male'),
     ('Female', 'Female'),

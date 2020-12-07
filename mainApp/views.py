@@ -20,6 +20,7 @@ from .models import Pet, Shelter, Feature, Images
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from contactMessages.forms import CommentForm
+from django.urls import reverse
 import copy
 import json
 from searchEngine.forms import petSearchForm
@@ -182,15 +183,20 @@ class CreateShelterView(LoginRequiredMixin, CreateView):
         for m, e in form.errors.as_data().items():
             errorMessage = str(e[0]).replace("['", "").replace("']", "")
         messages.error(self.request, errorMessage)
+        
         return super().form_invalid(form)
     
     def post(self, request, *args, **kwargs):
         try:
             super().post(request, *args, **kwargs)
-            return HttpResponseRedirect(self.get_success_url())
+            if self.get_success_url() == None:
+                HttpResponseRedirect(self.get_success_url())
+            else:
+                return HttpResponseRedirect(reverse("shelter-new"))
         except IntegrityError:
             messages.add_message(request, messages.ERROR, f'Sorry {self.request.user} but only one shelter is allowed per account.')
-            return render(request, template_name=self.template_name, context=self.get_context_data())
+            return HttpResponseRedirect(reverse("shelter-new"))
+            #return render(request, template_name=self.template_name, context=self.get_context_data())
     
     def test_func(self):
         # Check that the user is the manager
@@ -567,16 +573,3 @@ class LazyReloadShelters(ListView):
             }
             shelters.append(shelter)
         return shelters
-
-# class ProfileOptionsShelter(LoginRequiredMixin, UpdateView):
-#     template_name = "profile/profileOptions.html"
-#     form_class = UserUpdateForm
-#     model = User
-    
-#     def get_context_data(self, **kwargs):
-#         # Call the base implementation first to get the context
-#         context = super().get_context_data(**kwargs)
-#         context['titleTab'] = 'Options'
-#         #context['object'] = Shelter.objects.get(manager= self.request.user)
-        
-#         return context
