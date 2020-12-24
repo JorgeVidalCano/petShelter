@@ -108,6 +108,7 @@ class Pet(models.Model):
     
     def allFeatures(self):
         return Feature.objects.filter(pet=self.id)
+        #return Pet.objects.get(id=self.id).features
 
     @property
     def thumbnail_preview_list(self):    
@@ -128,8 +129,9 @@ class Pet(models.Model):
         return self.shelter.name
 
     def getAllFeatures(self):
-        return Feature.objects.filter(pet=self)
-
+        return Pet.objects.get(id=self.id).features.all()
+        
+        
 class Images(models.Model):
     #id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=60, default="", blank=True)

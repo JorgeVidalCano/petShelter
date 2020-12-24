@@ -29,11 +29,6 @@
       </ul>
     </div>
   </div>    
-  {% if related_pets %}
-  <div class="container-fluid">
-      {% include "mainApp/pet_card.html" with CategoryName="Similar Pets" PetList=related_pets %} 
-  </div>
-  {% endif %}
   {% if not user.is_staff %}
   <div class="container special-width py-4">
     {% if user.is_authenticated %}
@@ -56,6 +51,12 @@
     </div>
   </div>
   {% endif %}
+  {% if related_pets %}
+  <div class="container-fluid">
+      {% include "mainApp/pet_card.html" with CategoryName="Similar Pets" PetList=related_pets %} 
+  </div>
+  {% endif %}
+  
 </div>
 
 {% endblock content %}
