@@ -11,23 +11,18 @@
 
 <div class="row mx-3 general-row justify-content-center">
   {% for pet in PetList %}
-  <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 pet-card">
+  <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 pet-card">
     <a href="{% url 'pet-detail' pet.slug %}">
-    <div class="card mb-4 box-shadow" >
-      <img id="pet-image-card" class="card-img-top border border-rounded" alt="{{ pet.images.name }}" src="{{ pet.petMainPic}}">
-      <div class="card-img-overlay">
-        <h3><span class="badge badge-primary {{ pet.status }}">{{ pet.status }}</span></h3>
-      </div>
-      <div class="card-body">
-        <p class="card-text text-primary"><b>{{ pet.name|title }}</b></p>
-        <p class="card-text">Place {{ pet.shelter.name|title }}</p>
-        <p class="card-text">Sex {{ pet.sex }}</p>
-        <div class="d-flex justify-content-between align-items-center">
-          <small class="text-muted">{{ pet.date_created }}</small>
+      <div class="card mb-4 box-shadow" >
+        <img id="pet-image-card" class="card-img-top border border-rounded" alt="{{ pet.images.name }}" src="{{ pet.petMainPic}}">
+        <div class="card-img-overlay text-left">
+          <h4><span class="badge badge-primary {{ pet.status }}">{{ pet.status }}</span></h4>
+          <div class="card-img-overlay d-flex align-items-end">
+            <p class="badge badge-primary">{{ pet.shelter.name|title }}</p>
+          </div>
         </div>
       </div>
-    </div>
-  </a>
+    </a>
   </div> 
   {% endfor %}      
 </div>

@@ -27,19 +27,14 @@ $(document).ready(function () {
                 for ( var i = 0; i < instance.length; i++){
                   console.log(instance[i].slug )
                   var results = $(`
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 pet-card">
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 pet-card">
                     <a href="/${ instance[i].slug }" >
                     <div class="card mb-4 box-shadow">
                       <img id="pet-image-card" class="card-img-top" alt="${ instance[i].name }" src="${ instance[i].images}">
-                      <div class="card-img-overlay">
-                        <h3><span class="badge badge-primary ${ instance[i].status }">${ instance[i].status }</span></h3>
-                      </div>
-                      <div class="card-body">
-                        <p class="card-text text-primary"><b>${ instance[i].name }</b></p>
-                        <p class="card-text">Place ${ instance[i].shelter }</p>
-                        <p class="card-text">Sex ${ instance[i].sex }</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                          <small class="text-muted">${ instance[i].date_created }</small>
+                      <div class="card-img-overlay text-left">
+                        <h4><span class="badge badge-primary ${ instance[i].status }">${ instance[i].status }</span></h4>
+                        <div class="card-img-overlay d-flex align-items-end">
+                        <p class="badge badge-primary"> ${ instance[i].shelter }</p>
                         </div>
                       </div>
                     </div>

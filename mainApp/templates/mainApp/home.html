@@ -4,8 +4,7 @@
 {% load carousel %}
 {% carousel %}
 
-<div class="container-fluid">
-   
+<div class="container text-center">
     {% include "mainApp/pet_card.html" with CategoryName=shelterName1 PetList=petShelter1 linkTo=slugShelter1 %}
     {% include "mainApp/pet_card.html" with CategoryName=shelterName2 PetList=petShelter2 linkTo=slugShelter2 %}
     {% include "mainApp/pet_card.html" with CategoryName="All pets" PetList=pets %}
